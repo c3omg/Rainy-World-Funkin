@@ -1,3 +1,7 @@
-So this is all lurzard fault actually, they supported me while making this, so like, yeah blame them
+# Gettin' Funky on a Rainy day yuh
 
-this is a recreation of fnf in rain world, with modding support, so adding custom charts should be very easy
+A mod that recreates FNF in rain world, with modding support
+
+## STILL A W.I.P
+
+most stuff aint finished
