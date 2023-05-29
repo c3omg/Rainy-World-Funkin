@@ -1,0 +1,14 @@
+{
+	"animations" : [
+		["idle", "spear_slugcat_idle", 12, false], 
+		["left", "spear_slugcat_left", 12, false], 
+		["down", "spear_slugcat_down", 12, false], 
+		["up", "spear_slugcat_up", 12, false], 
+		["right", "spear_slugcat_right", 12, false], 
+	],
+	"scale" : 1.75,
+	"icon" : "spearman",
+	"isFacingRight" : true,
+	"character_image" : "characters/spear slugcat",
+	"GlobalPosition" : [15, 35],
+}

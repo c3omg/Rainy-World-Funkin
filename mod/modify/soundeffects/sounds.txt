@@ -1,0 +1,5 @@
+[ADD]Missnote1 : sfxmissnote1
+[ADD]Missnote2 : sfxmissnote2
+[ADD]Missnote3 : sfxmissnote3
+[ADD]FNFDeath : sfxfnfdeath
+[ADD}FNFRestart : sfxgameOverEnd

@@ -1,0 +1,7 @@
+{
+	"health_gain" : -5,
+	"health_loss" : 5,
+	"overrideColor" : [144, 0, 0],
+	"ignoreNote" : true,
+	"causesHitMiss" : true,
+}

@@ -1,0 +1,51 @@
+{ "frames": {
+   "outskirts/sky": {
+    "frame": { "x": 0, "y": 0, "w": 1366, "h": 768 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1366, "h": 768 },
+    "sourceSize": { "w": 1366, "h": 768 },
+    "duration": 100
+   },
+   "outskirts/cloud": {
+    "frame": { "x": 1366, "y": 0, "w": 1366, "h": 768 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1366, "h": 768 },
+    "sourceSize": { "w": 1366, "h": 768 },
+    "duration": 100
+   },
+   "outskirts/buildings": {
+    "frame": { "x": 2732, "y": 0, "w": 1366, "h": 768 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1366, "h": 768 },
+    "sourceSize": { "w": 1366, "h": 768 },
+    "duration": 100
+   },
+   "outskirts/hills": {
+    "frame": { "x": 4098, "y": 0, "w": 1366, "h": 768 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1366, "h": 768 },
+    "sourceSize": { "w": 1366, "h": 768 },
+    "duration": 100
+   },
+   "outskirts/ground": {
+    "frame": { "x": 5464, "y": 0, "w": 1366, "h": 768 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 1366, "h": 768 },
+    "sourceSize": { "w": 1366, "h": 768 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3-rc4-x64",
+  "image": "outskirts.png",
+  "format": "RGBA8888",
+  "size": { "w": 6830, "h": 768 },
+  "scale": "1"
+ }
+}

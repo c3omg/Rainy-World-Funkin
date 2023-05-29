@@ -1,0 +1,13 @@
+{
+	"animations" : [
+		["idle", "red_hunter_anim_idle", 8, false], 
+		["left", "red_hunter_anim_left", 8, false], 
+		["down", "red_hunter_anim_down", 13, false], 
+		["up", "red_hunter_anim_up", 8, false], 
+		["right", "red_hunter_anim_right", 8, false], 
+	],
+	"scale" : 2.5,
+	"icon" : "hunter",
+	"isFacingRight" : true,
+	"character_image" : "characters/hunter",
+}

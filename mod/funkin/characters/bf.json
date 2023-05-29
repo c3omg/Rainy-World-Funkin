@@ -1,0 +1,19 @@
+{
+	"animations" : [
+		["idle", "the_rapper_idle", 7, false], 
+		["left", "the_rapper_left", 7, false], 
+		["down", "the_rapper_down", 7, false], 
+		["up", "the_rapper_up", 7, false], 
+		["right", "the_rapper_right", 7, false], 
+		["left-miss", "the_rapper_leftmiss", 11, false], 
+		["down-miss", "the_rapper_downmiss", 11, false], 
+		["up-miss", "the_rapper_upmiss", 11, false], 
+		["right-miss", "the_rapper_rightmiss", 11, false], 
+		["Death", "the_rapper_die", 3, false],
+	],
+	"scale" : 1.65,
+	"icon" : "bf",
+	"isFacingRight" : true,
+	"character_image" : "characters/the_rapper",
+	"GlobalPosition" : [0, 10],
+}

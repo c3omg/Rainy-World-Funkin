@@ -1,0 +1,15 @@
+{
+	"animations" : [
+		["idle", "inv_datingsim_idle", 19, false], 
+		["left", "inv_datingsim_left", 19, false], 
+		["down", "inv_datingsim_down", 19, false], 
+		["up", "inv_datingsim_up", 19, false], 
+		["right", "inv_datingsim_right", 19, false], 
+	],
+	"scale" : 0.85,
+	"icon" : "inv",
+	"isFacingRight" : true,
+	"character_image" : "characters/inv_datingsim",
+	"GlobalPosition" : [0, 0],
+	"CameraOffset" : [45, 5],
+}

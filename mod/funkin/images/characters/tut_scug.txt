@@ -1,0 +1,83 @@
+{ "frames": {
+   "idle_0": {
+    "frame": { "x": 340, "y": 0, "w": 111, "h": 92 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 8, "y": 25, "w": 111, "h": 92 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   },
+   "left_0": {
+    "frame": { "x": 0, "y": 0, "w": 119, "h": 92 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 0, "y": 25, "w": 119, "h": 92 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   },
+   "left_1": {
+    "frame": { "x": 119, "y": 0, "w": 116, "h": 92 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 3, "y": 25, "w": 116, "h": 92 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   },
+   "down_0": {
+    "frame": { "x": 340, "y": 92, "w": 122, "h": 82 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 3, "y": 35, "w": 122, "h": 82 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   },
+   "down_1": {
+    "frame": { "x": 101, "y": 92, "w": 118, "h": 85 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 5, "y": 32, "w": 118, "h": 85 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   },
+   "up_0": {
+    "frame": { "x": 0, "y": 92, "w": 101, "h": 101 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 13, "y": 16, "w": 101, "h": 101 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   },
+   "up_1": {
+    "frame": { "x": 235, "y": 0, "w": 105, "h": 98 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 11, "y": 19, "w": 105, "h": 98 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   },
+   "right_0": {
+    "frame": { "x": 327, "y": 174, "w": 106, "h": 92 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 14, "y": 25, "w": 106, "h": 92 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   },
+   "right_1": {
+    "frame": { "x": 219, "y": 98, "w": 108, "h": 92 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 12, "y": 25, "w": 108, "h": 92 },
+    "sourceSize": { "w": 128, "h": 128 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3-rc4-x64",
+  "image": "tut_scug.png",
+  "format": "RGBA8888",
+  "size": { "w": 462, "h": 266 },
+  "scale": "1"
+ }
+}

@@ -1,0 +1,14 @@
+{
+	"animations" : [
+		["idle", "idle", 25, false], 
+		["left", "left", 25, false], 
+		["down", "down", 25, false], 
+		["up", "up", 25, false], 
+		["right", "right", 25, false], 
+	],
+	"scale" : 2.5,
+	"icon" : "tut_slugger",
+	"isFacingRight" : false,
+	"character_image" : "characters/tut_scug",
+	"GlobalPosition" : [0, 0],
+}

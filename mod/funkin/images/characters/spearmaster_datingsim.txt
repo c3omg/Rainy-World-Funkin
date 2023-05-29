@@ -1,0 +1,179 @@
+{ "frames": {
+   "spearmaster_datingsim_idle_0": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_1": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_2": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_3": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_4": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_5": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_6": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_7": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_8": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_9": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_10": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_11": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_12": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_13": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_14": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_15": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_16": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_17": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_18": {
+    "frame": { "x": 0, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_19": {
+    "frame": { "x": 213, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   },
+   "spearmaster_datingsim_idle_20": {
+    "frame": { "x": 213, "y": 0, "w": 213, "h": 377 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 164, "y": 8, "w": 213, "h": 377 },
+    "sourceSize": { "w": 377, "h": 401 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3-rc4-x64",
+  "image": "spearmaster_datingsim.png",
+  "format": "RGBA8888",
+  "size": { "w": 426, "h": 377 },
+  "scale": "1"
+ }
+}
