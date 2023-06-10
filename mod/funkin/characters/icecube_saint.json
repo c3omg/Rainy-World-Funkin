@@ -1,0 +1,14 @@
+{
+	"animations" : [
+		["idle", "icechewer_saint_idle", 16, false], 
+		["left", "icechewer_saint_left", 16, false], 
+		["down", "icechewer_saint_down", 16, false], 
+		["up", "icechewer_saint_up", 16, false], 
+		["right", "icechewer_saint_right", 16, false], 
+	],
+	"scale" : 3.5,
+	"icon" : "icecube_saint",
+	"isFacingRight" : true,
+	"character_image" : "characters/icecube_saint",
+	"GlobalPosition" : [0, 0],
+}

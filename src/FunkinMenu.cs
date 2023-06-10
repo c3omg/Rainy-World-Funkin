@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using static MonoMod.InlineRT.MonoModRule;
+using static RWF.Conductor;
+
 
 namespace RWF
 {
@@ -19,11 +22,17 @@ namespace RWF
         public static event FunkinMenu.hook_update OnUpdate;
         public static event FunkinMenu.hook_updatePost OnUpdatePost;
         public static event FunkinMenu.hook_ctor OnCreate;
+        public static event FunkinMenu.hooke_playerhit OnPlayerHit;
+        public static event FunkinMenu.hooke_enemyhit OnEnemyHit;
+        public static event FunkinMenu.hook_missnote OnMiss;
 
         public delegate void hook_beatHit(RWF.FunkinMenu self, int curBeat);
         public delegate void hook_update(RWF.FunkinMenu self);
         public delegate void hook_updatePost(RWF.FunkinMenu self);
         public delegate void hook_ctor(RWF.FunkinMenu self);
+        public delegate void hooke_playerhit(RWF.FunkinMenu self, Swagshit.Note daNote);
+        public delegate void hooke_enemyhit(RWF.FunkinMenu self, Swagshit.Note daNote);
+        public delegate void hook_missnote(RWF.FunkinMenu self, Swagshit.Note daNote);
 
         // Varibles
 
@@ -42,6 +51,7 @@ namespace RWF
 
         public float health = 1f;
         public Song SONG = null;
+        public bool startedCountdown = false;
         public float cameraHUDScale = 0f;
         public float cameraGameScale = 0f;
         public float spawnTime = 2000;
@@ -65,10 +75,6 @@ namespace RWF
         public List<Swagshit.Note> notes = new List<Swagshit.Note> { };
         public List<FNFJSON.Note> unspawnNotes = new List<FNFJSON.Note> { };
 
-        public float BPM = 100.0f;
-        public int currentBeat = 0;
-        public int currentStep = 0;
-
         public int combo = 0;
         public int score = 0;
 
@@ -78,37 +84,23 @@ namespace RWF
         public int dogshits = 0;
         public int misses = 0;
 
+        public float decBeat = 0;
+
         public FLX_BAR bar;
 
         public UnityEngine.Vector2 cameraPosiion = new(0, 0);
 
         private int lastBeat = 0;
 
-        public float crochet = 0;
-        public float step_crochet
-        {
-            get
-            {
-                return crochet / 4;
-            }
-        }
-
         public float CurrentTime
         {
             get
             {
-
-                if (this.manager.musicPlayer != null && this.manager.musicPlayer.song != null)
-                {
-                    if (this.manager.musicPlayer.song.subTracks[0].source != null)
-                    {
-                        return this.manager.musicPlayer.song.subTracks[0].source.time * 1000;
-                    }
-                }
-
-                return 0f;
+                return Conductor.songPosition;
             }
         }
+
+        private bool startingSong = true;
 
         public MenuLabel scoretText;
 
@@ -118,6 +110,25 @@ namespace RWF
 
         public FunkinMenu(ProcessManager manager) : base(manager, Plugin.FunkinMenu) // this whole thing is fucking bloated, but it works alright
         {
+
+            this.framesPerSecond = 60;
+
+            curBeat = 0;
+            curStep = 0;
+            decBeat = 0;
+
+            Conductor.songPosition = -5000 / Conductor.songPosition;
+
+            this.pages.Add(new Page(this, null, "game", 0));
+            this.pages.Add(new Page(this, null, "hud", 1));
+            this.pages.Add(new Page(this, null, "other", 2));
+            this.pages[0].Container = new();
+            this.pages[1].Container = new();
+            this.pages[2].Container = new();
+
+            Futile.stage.AddChild(this.pages[0].Container);
+            Futile.stage.AddChild(this.pages[1].Container);
+            Futile.stage.AddChild(this.pages[2].Container);
 
             if (!Plugin.Songs.ContainsKey(Plugin.SelectedSong))
             {
@@ -135,9 +146,9 @@ namespace RWF
                 return;
             }
 
-            BPM = this.SONG.bpm;
+            bpm = this.SONG.bpm;
 
-            crochet = (60f / BPM) * 1000;
+            crochet = (60f / bpm) * 1000;
 
             strumLineNotes = new List<StrumNote>();
             opponentStrums = new List<StrumNote>();
@@ -145,24 +156,22 @@ namespace RWF
 
             keysPressed = new Dictionary<KeyCode, bool>()
             {
-                [RWF_Options.key_note_left.Value] = false,
-                [RWF_Options.key_note_down.Value] = false,
-                [RWF_Options.key_note_up.Value] = false,
-                [RWF_Options.key_note_right.Value] = false,
+                [RWF_Options.key_note[0].Value] = false,
+                [RWF_Options.key_note[1].Value] = false,
+                [RWF_Options.key_note[2].Value] = false,
+                [RWF_Options.key_note[3].Value] = false,
                 [KeyCode.Escape] = false,
                 [KeyCode.Return] = false,
+                [KeyCode.R] = false,
             };
 
             keyData = new Dictionary<KeyCode, int>()
             {
-                [RWF_Options.key_note_left.Value] = 0,
-                [RWF_Options.key_note_down.Value] = 1,
-                [RWF_Options.key_note_up.Value] = 2,
-                [RWF_Options.key_note_right.Value] = 3,
+                [RWF_Options.key_note[0].Value] = 0,
+                [RWF_Options.key_note[1].Value] = 1,
+                [RWF_Options.key_note[2].Value] = 2,
+                [RWF_Options.key_note[3].Value] = 3,
             };
-
-            this.pages.Add(new Page(this, null, "game", 0));
-            this.pages.Add(new Page(this, null, "hud", 1));
 
             var stageCheck = File.Exists(AssetManager.ResolveFilePath("funkin/stages/" + SONG.StageName.ToString().ToLower() + ".json")) ? AssetManager.ResolveFilePath("funkin/stages/" + SONG.StageName.ToString().ToLower() + ".json") : null;
 
@@ -192,10 +201,12 @@ namespace RWF
 
                         if (floorSus > 0)
                         {
-                            for (int i = 0; i < floorSus + 1; i++)
+                            for (int i = 1; i < floorSus + 1; i++)
                             {
 
                                 FNFJSON.Note Sus_note = new(note);
+
+                                Sus_note.PsychNoteType = note.PsychNoteType;
 
                                 if (i == floorSus)
                                 {
@@ -220,7 +231,7 @@ namespace RWF
 
             }
 
-            //unspawnNotes = unspawnNotes.OrderByDescending(x => x.StrumTime).ToList();
+            unspawnNotes = unspawnNotes.OrderBy(x => x.StrumTime).ToList();
 
             var charDataP1 = AssetManager.ResolveFilePath("funkin/characters/" + SONG.Player1Char.ToString() + ".json");
             var charDataP2 = AssetManager.ResolveFilePath("funkin/characters/" + SONG.Player2Char.ToString() + ".json");
@@ -241,6 +252,7 @@ namespace RWF
             dad = new Character(this, this.pages[0], File.ReadAllText(charDataP2));
 
             dad.flipped = !dad.flipped;
+            dad.sprite.scaleX *= -1;
 
             this.pages[0].subObjects.Add(dad);
 
@@ -293,23 +305,27 @@ namespace RWF
 
             scoretText.label.color = stage.textColorOverride;
 
-            var song = new Music.Song(this.manager.musicPlayer, "FNF - " + SONG.Name, Music.MusicPlayer.MusicContext.Menu);
-
-            if (this.manager.musicPlayer.song == null)
-            {
-                this.manager.musicPlayer.song = song;
-                this.manager.musicPlayer.song.playWhenReady = true;
-            }
+            Conductor.songPosition = -Conductor.crochet * 5;
 
             if (FunkinMenu.OnCreate != null)
             {
                 FunkinMenu.OnCreate(this);
             }
 
+            startCountdown();
+
+        }
+
+        private void startCountdown()
+        {
+            startedCountdown = true;
+            Conductor.songPosition = -Conductor.crochet * 5;
         }
 
         public void goodNoteHit(Swagshit.Note daNote)
         {
+            if (OnPlayerHit != null) OnPlayerHit(this, daNote);
+
             health += 0.023f * daNote.healthGain;
 
             combo++;
@@ -323,6 +339,9 @@ namespace RWF
 
         public void noteMiss(Swagshit.Note daNote)
         {
+
+            if (OnMiss != null) OnMiss(this, daNote);
+
             int random = UnityEngine.Random.Range(1, 3);
 
             this.PlaySound(Plugin.missnote_sounds[random - 1], 0, 0.1f, 1f);
@@ -341,6 +360,8 @@ namespace RWF
 
         public void noteMiss(int noteData)
         {
+            if (OnMiss != null) OnMiss(this, null);
+
             int random = UnityEngine.Random.Range(1, 3);
 
             this.PlaySound(Plugin.missnote_sounds[random - 1], 0, 0.1f, 1f);
@@ -379,6 +400,22 @@ namespace RWF
                 FunkinMenu.OnBeatHit(this, curBeat);
             }
 
+            switch (curBeat)
+            {
+                case (-4):
+                    this.PlaySound(Plugin.introSounds[2], 0, 0.2f, 1);
+                    break;
+                case (-3):
+                    this.PlaySound(Plugin.introSounds[1], 0, 0.2f, 1);
+                    break;
+                case (-2):
+                    this.PlaySound(Plugin.introSounds[0], 0, 0.2f, 1);
+                    break;
+                case (-1):
+                    this.PlaySound(Plugin.introSounds[3], 0, 0.2f, 1);
+                    break;
+            }
+
             if (curBeat % stage.bop_speed == 0)
             {
                 if (boyfriend.finished | boyfriend.curAnim == "idle")
@@ -391,13 +428,13 @@ namespace RWF
                 }
             }
 
-            hpIconP1.Size *= 1.3f;
-            hpIconP2.Size *= 1.3f;
-
             if (curBeat % camBounceSpeed == 0)
             {
-                Plugin.camGameScale += 0.015f * camStrengh;
-                Plugin.camHUDScale += 0.03f * camStrengh;
+                //Plugin.camGameScale += 0.015f * camStrengh;
+                //Plugin.camHUDScale += 0.03f * camStrengh;
+
+                this.pages[0].Container.ScaleAroundPointAbsolute(this.manager.rainWorld.screenSize / 2, this.pages[0].Container.scaleX + 0.015f * camStrengh, this.pages[0].Container.scaleY + 0.015f * camStrengh);
+                this.pages[1].Container.ScaleAroundPointAbsolute(this.manager.rainWorld.screenSize / 2, this.pages[1].Container.scaleX + 0.03f * camStrengh, this.pages[1].Container.scaleY + 0.03f * camStrengh);
             }
         }
 
@@ -414,6 +451,7 @@ namespace RWF
             //var notesDatas:Array<Int> = [];
             bool notesStopped = false;
             bool pressedNote = false;
+            bool playAnim = true;
             Color noteColor = BasicNoteColours[Data];
 
             List<Swagshit.Note> pressableNotes = new List<Swagshit.Note> { };
@@ -455,6 +493,7 @@ namespace RWF
 
                         noteColor = epicNote.NoteColours[epicNote.noteData];
                         pressedNote = true;
+                        playAnim = !epicNote.no_animation;
                         pressNotes.Add(epicNote);
                     }
 
@@ -470,21 +509,24 @@ namespace RWF
                 NoteSplash splash = new(this, pages[1], noteColor, playerStrums[Data].pos);
 
                 this.pages[1].subObjects.Add(splash);
-
-                switch (Data)
+                
+                if (playAnim)
                 {
-                    case 0:
-                        boyfriend.PlayAnimation("left", true);
-                        break;
-                    case 1:
-                        boyfriend.PlayAnimation("down", true);
-                        break;
-                    case 2:
-                        boyfriend.PlayAnimation("up", true);
-                        break;
-                    case 3:
-                        boyfriend.PlayAnimation("right", true);
-                        break;
+                    switch (Data)
+                    {
+                        case 0:
+                            boyfriend.PlayAnimation("left", true);
+                            break;
+                        case 1:
+                            boyfriend.PlayAnimation("down", true);
+                            break;
+                        case 2:
+                            boyfriend.PlayAnimation("up", true);
+                            break;
+                        case 3:
+                            boyfriend.PlayAnimation("right", true);
+                            break;
+                    }
                 }
 
             }
@@ -523,8 +565,11 @@ namespace RWF
 
             unspawnNotes.Clear();
 
-            this.manager.musicPlayer.song.subTracks[0].source.Stop();
-            this.manager.musicPlayer.song = null;
+            if (this.manager.musicPlayer.song != null)
+            {
+                this.manager.musicPlayer.song.subTracks[0].source.Stop();
+                this.manager.musicPlayer.song = null;
+            }
 
             boyfriend.PlayAnimation("Death", true);
 
@@ -561,6 +606,21 @@ namespace RWF
             return (trueVecoter + ((trueVecoter - (vector)) * (scale - 1)));
         }
 
+        private void startSong()
+        {
+            startingSong = false;
+
+            var song = new Music.Song(this.manager.musicPlayer, "FNF - " + SONG.Name, Music.MusicPlayer.MusicContext.Menu);
+
+            Conductor.CurrentSong = song;
+
+            if (this.manager.musicPlayer.song == null)
+            {
+                this.manager.musicPlayer.song = song;
+                this.manager.musicPlayer.song.playWhenReady = true;
+            }
+        }
+
         public override void Update() // this might be the reason for the lag, but im scared it'll bite back if i even think about making it work better
         {
             base.Update();
@@ -570,25 +630,50 @@ namespace RWF
                 FunkinMenu.OnUpdate(this);
             }
 
-            Plugin.camGameScale = Mathf.Lerp(Plugin.camGameScale, camGameWantedZoom, 0.1f);
-            Plugin.camHUDScale = Mathf.Lerp(Plugin.camHUDScale, 1f, 0.1f);
 
-            
+            Plugin.camGameScale = Mathf.Lerp(Plugin.camGameScale, 1, 0.1f);
+            Plugin.camHUDScale = Mathf.Lerp(Plugin.camHUDScale, 1, 0.1f);
+
+            this.pages[0].Container.ScaleAroundPointAbsolute(this.manager.rainWorld.screenSize / 2, Mathf.Lerp(this.pages[0].Container.scaleX, camGameWantedZoom, 0.1f), Mathf.Lerp(this.pages[0].Container.scaleY, camGameWantedZoom, 0.1f));
+            this.pages[1].Container.ScaleAroundPointAbsolute(this.manager.rainWorld.screenSize / 2, Mathf.Lerp(this.pages[1].Container.scaleX, 1f, 0.1f), Mathf.Lerp(this.pages[1].Container.scaleY, 1f, 0.1f));
+
             if (!gotblueballed)
             {
-                currentBeat = (int)Mathf.Floor((CurrentTime / 1000f) / (60f / BPM));
-                currentStep = (int)Mathf.Floor((CurrentTime / 1000f) / (60f / BPM)) * 4;
+                if (startedCountdown && this.manager.musicPlayer.song == null)
+                {
+                    Conductor.songPosition += (Time.unscaledDeltaTime * 1f) * 1000;                
+                }
+                else if (this.manager.musicPlayer.song != null)
+                {
+                    Conductor.songPosition = this.manager.musicPlayer.song.subTracks[0].source.time * 1000;
+                }
+
+                if (startingSong)
+                {
+                    if (startedCountdown && Conductor.songPosition >= 0)
+                        startSong();
+                    else if (!startedCountdown)
+                        Conductor.songPosition = -Conductor.crochet * 12;
+                }
+
+                decBeat = (CurrentTime / 1000f) / (60f / bpm);
+                curBeat = (int)Mathf.Floor((CurrentTime / 1000f) / (60f / bpm));
+                curStep = (int)Mathf.Floor((CurrentTime / 1000f) / (60f / bpm)) * 4;
 
                 var boyfriendlass = boyfriend.flipped ? boyfriend.pos + new UnityEngine.Vector2(-boyfriend.CameraOffset.x, boyfriend.CameraOffset.y) : boyfriend.pos + new UnityEngine.Vector2(boyfriend.CameraOffset.x, boyfriend.CameraOffset.y);
                 var dadlass = dad.flipped ? dad.pos + new UnityEngine.Vector2(-dad.CameraOffset.x, dad.CameraOffset.y) : dad.pos + new UnityEngine.Vector2(dad.CameraOffset.x, dad.CameraOffset.y);
 
-                if (SONG.Sections.Count > currentBeat / 4)
+                if (curBeat >= 0 && SONG.Sections.Count > curBeat / 4)
                 {
-                    if (SONG.Sections[currentBeat / 4].mustHitSection)
+                    if (SONG.Sections[curBeat / 4].mustHitSection)
                         cameraPosiion = UnityEngine.Vector2.Lerp(cameraPosiion, boyfriendlass, stage.camSpeed);
                     else
                         cameraPosiion = UnityEngine.Vector2.Lerp(cameraPosiion, dadlass, stage.camSpeed);
                 }
+                else cameraPosiion = UnityEngine.Vector2.Lerp(cameraPosiion, dadlass, stage.camSpeed);
+
+                hpIconP1.Size = new Vector2(Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)), Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)));
+                hpIconP2.Size = new Vector2(Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)), Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)));
 
                 if (health > 2) health = 2;
                 else if (health <= 0)
@@ -604,12 +689,12 @@ namespace RWF
                 hpIconP1.pos = UnityEngine.Vector2.Lerp(new(850, 125), new(500, 125), health / 2) - new UnityEngine.Vector2(15, 0);
                 hpIconP2.pos = UnityEngine.Vector2.Lerp(new(850, 125), new(500, 125), health / 2) + new UnityEngine.Vector2(15, 0);
 
-                if (currentBeat != lastBeat)
+                if (curBeat != lastBeat)
                 {
-                    //Debug.Log("Beat Hit: " + currentBeat);
+                    //Debug.Log("Beat Hit: " + curBeat);
                     //Plugin.camGameScale += 0.3f;
-                    lastBeat = currentBeat;
-                    beatHit(currentBeat);
+                    lastBeat = curBeat;
+                    beatHit(curBeat);
                 }
 
                 if (unspawnNotes.Count > 0 && unspawnNotes[0] != null)
@@ -617,12 +702,12 @@ namespace RWF
                     float time = spawnTime;
                     if (SONG.speed < 1f) time /= SONG.speed;
 
-                    while (unspawnNotes.Count > 0 && unspawnNotes[0].StrumTime - CurrentTime < time)
+                    while (unspawnNotes.Count > 0 && unspawnNotes[0].StrumTime - CurrentTime <= time)
                     {
 
                         FNFJSON.Note daNote = unspawnNotes[0];
 
-                        Swagshit.Note dunceNote = new Swagshit.Note(this, null, unspawnNotes[0].StrumTime, ((int)unspawnNotes[0].NoteData), unspawnNotes[0].GottaHit, default, unspawnNotes[0].isSustainNote, unspawnNotes[0].lastSustainNote);
+                        Swagshit.Note dunceNote = new Swagshit.Note(this, this.pages[1], unspawnNotes[0].StrumTime, ((int)unspawnNotes[0].NoteData), unspawnNotes[0].GottaHit, default, unspawnNotes[0].isSustainNote, unspawnNotes[0].lastSustainNote);
 
                         if (daNote.PsychNoteType != "")
                         {
@@ -644,6 +729,7 @@ namespace RWF
                                 dunceNote.ignoreNote = noteType.ignoreNote;
                                 dunceNote.CPUignoreNote = noteType.CPUignoreNote;
                                 dunceNote.causesHitMiss = noteType.causesHitMiss;
+                                dunceNote.no_animation = noteType.no_animation;
 
                                 var imagePath = AssetManager.ResolveFilePath("funkin/images/" + noteType.note_atlas);
 
@@ -660,6 +746,12 @@ namespace RWF
                             }
                         }
 
+                        if (unspawnNotes[0].isSustainNote)
+                        {
+                            dunceNote.length *= step_crochet / 100 * 1.4f;
+                            dunceNote.length *= SONG.speed;
+                        }
+
                         notes.Add(dunceNote);
                         notes = notes.OrderByDescending(x => x.strumTime).ToList();
 
@@ -674,13 +766,14 @@ namespace RWF
                     if (this.manager.musicPlayer.song == null)
                     {
                         this.manager.RequestMainProcessSwitch(ProcessManager.ProcessID.MainMenu);
+                        this.framesPerSecond = 40;
                     }
                 }
 
-                foreach (Swagshit.Note note in notes.OrderBy(x => x.strumTime).ToList())
+                foreach (Swagshit.Note note in notes.ToList())
                 {
 
-                    if (note.strumTime - CurrentTime > CurrentTime + spawnTime)
+                    if (Conductor.songPosition > spawnTime + note.strumTime)
                     {
                         notes.Remove(note);
                         note.Destroy();
@@ -691,21 +784,25 @@ namespace RWF
 
                     if (note.strumTime - CurrentTime <= -0 && !note.mustPress && !note.CPUignoreNote)
                     {
+                        if (OnEnemyHit != null) OnEnemyHit(this, note);
 
-                        switch (note.noteData)
+                        if (!note.no_animation)
                         {
-                            case 0:
-                                dad.PlayAnimation("left", true);
-                                break;
-                            case 1:
-                                dad.PlayAnimation("down", true);
-                                break;
-                            case 2:
-                                dad.PlayAnimation("up", true);
-                                break;
-                            case 3:
-                                dad.PlayAnimation("right", true);
-                                break;
+                            switch (note.noteData)
+                            {
+                                case 0:
+                                    dad.PlayAnimation("left", true);
+                                    break;
+                                case 1:
+                                    dad.PlayAnimation("down", true);
+                                    break;
+                                case 2:
+                                    dad.PlayAnimation("up", true);
+                                    break;
+                                case 3:
+                                    dad.PlayAnimation("right", true);
+                                    break;
+                            }
                         }
 
                         notes.Remove(note);
@@ -802,7 +899,11 @@ namespace RWF
                             AttemptToPressNote(keyData[kvp]);
 
                         }
-                        else if (gotblueballed)
+                        else if (!gotblueballed && kvp == KeyCode.R)
+                        {
+                            health = -999;
+                        }
+                        else if (gotblueballed && !alreadygoingtoadifferentsecene)
                         {
                             //this.PlaySound(Plugin.fnfDeath, 0, 0.3f, 1f);
                             if (kvp == KeyCode.Escape)
@@ -814,9 +915,10 @@ namespace RWF
                                 }
 
                                 this.manager.RequestMainProcessSwitch(Plugin.FunkinFreeplayMenu);
+                                this.framesPerSecond = 40;
                                 alreadygoingtoadifferentsecene = true;
                             }
-                            else if (kvp == KeyCode.Return && !alreadygoingtoadifferentsecene)
+                            else if (kvp == KeyCode.Return)
                             {
                                 alreadygoingtoadifferentsecene = true;
                                 
@@ -826,8 +928,8 @@ namespace RWF
                                     this.manager.musicPlayer.song = null;
                                 }
 
-                                this.PlaySound(Plugin.fnfRestart);
-                                this.manager.RequestMainProcessSwitch(Plugin.FunkinRestart);
+                                this.PlaySound(Plugin.fnfRestart, 0, 0.2f, 1f);
+                                this.manager.RequestMainProcessSwitch(Plugin.FunkinRestart, 4f);
                             }
 
                         }

@@ -15,6 +15,7 @@ namespace RWF.Swagshit
         public bool ignoreNote = false;
         public bool CPUignoreNote = false;
         public bool causesHitMiss = false;
+        public bool no_animation = false;
 
         public NoteJSON() { }
 
@@ -87,6 +88,8 @@ namespace RWF.Swagshit
         public UnityEngine.Vector2 pos = UnityEngine.Vector2.zero;
         private Color color;
 
+        public float length = 1f;
+
         public Color[] NoteColours = new Color[]
         {
             Color.red,
@@ -110,6 +113,10 @@ namespace RWF.Swagshit
         public Note nextNote;
         public bool IsSusNote = false;
 
+        public bool no_animation = false;
+
+        private bool lastsus = false;
+
         public float healthGain = 1f;
         public float healthLoss = 1f;
 
@@ -122,15 +129,7 @@ namespace RWF.Swagshit
             get
             {
 
-                if (this.menu.manager.musicPlayer != null && this.menu.manager.musicPlayer.song != null)
-                {
-                    if (this.menu.manager.musicPlayer.song.subTracks[0].source != null)
-                    {
-                        return this.menu.manager.musicPlayer.song.subTracks[0].source.time * 1000;
-                    }
-                }
-
-                return 0f;
+                return Conductor.songPosition;
             }
         }
 
@@ -143,6 +142,7 @@ namespace RWF.Swagshit
             this.noteData = leData;
             this.mustPress = isPlayer;
             this.IsSusNote = SUSSY;
+            this.lastsus = lastSUSSY;
 
             this.color = NoteColours[leData];
 
@@ -253,6 +253,13 @@ namespace RWF.Swagshit
 
             sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos, true));
             sprite.scale = 2.5f * Plugin.camHUDScale;
+            
+            if (IsSusNote)
+            {
+                sprite.scaleX = 2.5f * RWF_Options.HoldNoteThickness.Value;
+                sprite.scaleY = length * Plugin.camHUDScale;
+            }
+
 
         }
 

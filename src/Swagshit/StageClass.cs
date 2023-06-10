@@ -1,5 +1,4 @@
-﻿using Menu;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +16,7 @@ namespace RWF.Swagshit
         public float zoom = 1f;
         public int bop_speed = 2;
         public float[] textColorOverride = new float[] {255, 255, 255};
-        public float camSpeed = 0.1f;
+        public float camSpeed = 0.05f;
 
         public StageJSON() { }
     }

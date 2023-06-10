@@ -1,0 +1,14 @@
+{
+	"animations" : [
+		["idle", "icechewer_boyfriend_idle", 16, false], 
+		["left", "icechewer_boyfriend_left", 16, false], 
+		["down", "icechewer_boyfriend_down", 16, false], 
+		["up", "icechewer_boyfriend_up", 16, false], 
+		["right", "icechewer_boyfriend_right", 16, false], 
+	],
+	"scale" : 3.5,
+	"icon" : "icecube_boyfriend",
+	"isFacingRight" : false,
+	"character_image" : "characters/icecube_boyfriend",
+	"GlobalPosition" : [0, 0],
+}

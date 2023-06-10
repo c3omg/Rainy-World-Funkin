@@ -1,0 +1,96 @@
+{ "frames": {
+   "icechewer_boyfriend_idle_0": {
+    "frame": { "x": 0, "y": 0, "w": 112, "h": 112 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 96, "y": 96, "w": 112, "h": 112 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_boyfriend_left_0": {
+    "frame": { "x": 112, "y": 0, "w": 112, "h": 112 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 96, "y": 96, "w": 112, "h": 112 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_boyfriend_left_1": {
+    "frame": { "x": 224, "y": 0, "w": 112, "h": 112 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 96, "y": 96, "w": 112, "h": 112 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_boyfriend_down_0": {
+    "frame": { "x": 0, "y": 112, "w": 112, "h": 112 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 96, "y": 96, "w": 112, "h": 112 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_boyfriend_down_1": {
+    "frame": { "x": 112, "y": 112, "w": 112, "h": 112 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 96, "y": 96, "w": 112, "h": 112 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_boyfriend_up_0": {
+    "frame": { "x": 224, "y": 112, "w": 112, "h": 112 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 96, "y": 96, "w": 112, "h": 112 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_boyfriend_up_1": {
+    "frame": { "x": 0, "y": 224, "w": 112, "h": 112 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 96, "y": 96, "w": 112, "h": 112 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_boyfriend_right_0": {
+    "frame": { "x": 112, "y": 224, "w": 112, "h": 112 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 96, "y": 96, "w": 112, "h": 112 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_boyfriend_right_1": {
+    "frame": { "x": 224, "y": 224, "w": 112, "h": 112 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 96, "y": 96, "w": 112, "h": 112 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3-rc4-x64",
+  "image": "icecube_boyfriend.png",
+  "format": "RGBA8888",
+  "size": { "w": 336, "h": 336 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "idle", "from": 0, "to": 0, "direction": "forward", "color": "#000000ff" },
+   { "name": "left", "from": 1, "to": 2, "direction": "forward", "color": "#000000ff" },
+   { "name": "down", "from": 3, "to": 4, "direction": "forward", "color": "#000000ff" },
+   { "name": "up", "from": 5, "to": 6, "direction": "forward", "color": "#000000ff" },
+   { "name": "right", "from": 7, "to": 8, "direction": "forward", "color": "#000000ff" }
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },
+   { "name": "Layer 3", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

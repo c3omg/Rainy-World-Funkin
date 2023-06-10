@@ -17,6 +17,13 @@ namespace RWF
         public static ProcessManager.ProcessID FunkinRestart => new ProcessManager.ProcessID("FunkinRestart", register: true);
 
         public static SoundID[] missnote_sounds;
+        public static SoundID[] introSounds = new SoundID[]
+        {
+            new SoundID("FNFIntro1", true),
+            new SoundID("FNFIntro2", true),
+            new SoundID("FNFIntro3", true),
+            new SoundID("FNFIntroGo", true),
+        };
 
         public static SoundID fnfDeath = new SoundID("FNFDeath", true);
         public static SoundID fnfRestart = new SoundID("FNFRestart", true);
@@ -26,10 +33,10 @@ namespace RWF
         private const string MOD_ID = "silky.rwf";
 
         public static Dictionary<string, string> Songs = new Dictionary<string, string>();
-        internal static float camGameScale = 1f;
-        internal static float camHUDScale = 1f;
+        public static float camGameScale = 1f;
+        public static float camHUDScale = 1f;
 
-        internal static string SelectedSong = "blammed";
+        public static string SelectedSong = "blammed";
 
         // Add hooks
 
@@ -106,6 +113,67 @@ namespace RWF
             IL.ProcessManager.PostSwitchMainProcess += ProcessManager_PostSwitchMainProcess;
 
             RWF.FunkinMenu.OnBeatHit += FunkinMenu_OnBeatHit;
+            RWF.FunkinMenu.OnUpdate += FunkinMenu_OnUpdate;
+            RWF.FunkinMenu.OnCreate += FunkinMenu_OnCreate;
+        }
+
+        private void FunkinMenu_OnCreate(FunkinMenu self)
+        {
+            if (self.SONG.Name.ToLower() == "ice cube")
+            {
+                self.stage.camSpeed = 0.005f;
+            }
+        }
+
+        private void FunkinMenu_OnUpdate(FunkinMenu self)
+        {
+            if (self.SONG.Name.ToLower() == "disk")
+            {
+
+                if (Conductor.curBeat >= 32)
+                {
+                    var bruh = 6f;
+                    var shit = 2.5f;
+
+                    if (Conductor.curBeat % 2 == 0)
+                        self.pages[0].Container.RotateAroundPointAbsolute(self.manager.rainWorld.screenSize / 2, Mathf.Lerp(-bruh, -shit, FlxEase.backOut(self.decBeat % 1)));
+                    else
+                        self.pages[0].Container.RotateAroundPointAbsolute(self.manager.rainWorld.screenSize / 2, Mathf.Lerp(bruh, shit, FlxEase.backOut(self.decBeat % 1)));
+                }
+
+            }
+
+            if (self.SONG.Name.ToLower() == "ice cube")
+            {
+
+                var up = 3.75f;
+                var down = 3.25f;
+                var fuckme = 25f;
+                var fuckyou = 20f;
+
+                if (Conductor.curBeat % 2 == 0)
+                {
+                    self.boyfriend.sprite.scaleX = Mathf.Lerp(up, self.boyfriend.size, FlxEase.circOut(self.decBeat % 1));
+                    self.boyfriend.sprite.scaleY = Mathf.Lerp(down, self.boyfriend.size, FlxEase.circOut(self.decBeat % 1));
+                    self.dad.sprite.scaleX = Mathf.Lerp(down, self.dad.size, FlxEase.circOut(self.decBeat % 1));
+                    self.dad.sprite.scaleY = Mathf.Lerp(up, self.dad.size, FlxEase.circOut(self.decBeat % 1));
+
+                    self.boyfriend.spriteOffset.y = Mathf.Lerp(-fuckyou, 0, FlxEase.circOut(self.decBeat % 1));
+                    self.dad.spriteOffset.y = Mathf.Lerp(fuckme, 0, FlxEase.circOut(self.decBeat % 1));
+                }
+                else
+                {
+                    self.boyfriend.sprite.scaleX = Mathf.Lerp(down, self.boyfriend.size, FlxEase.circOut(self.decBeat % 1));
+                    self.boyfriend.sprite.scaleY = Mathf.Lerp(up, self.boyfriend.size, FlxEase.circOut(self.decBeat % 1));
+                    self.dad.sprite.scaleX = Mathf.Lerp(up, self.dad.size, FlxEase.circOut(self.decBeat % 1));
+                    self.dad.sprite.scaleY = Mathf.Lerp(down, self.dad.size, FlxEase.circOut(self.decBeat % 1));
+
+                    self.dad.spriteOffset.y = Mathf.Lerp(-fuckme, 0, FlxEase.circOut(self.decBeat % 1));
+                    self.boyfriend.spriteOffset.y = Mathf.Lerp(fuckyou, 0, FlxEase.circOut(self.decBeat % 1));
+                }
+                    
+
+            }
         }
 
         private void FunkinMenu_OnBeatHit(FunkinMenu self, int curBeat)
@@ -118,6 +186,7 @@ namespace RWF
                     self.camBounceSpeed = 1;
                     self.camStrengh = 1.5f;
                 }
+
             }
             else if (self.SONG.Name.ToLower() == "fazfuck news")
             {
@@ -242,6 +311,14 @@ namespace RWF
                 new SoundID("Missnote3", true),
             };
 
+            introSounds = new SoundID[]
+            {
+                new SoundID("FNFIntro1", true),
+                new SoundID("FNFIntro2", true),
+                new SoundID("FNFIntro3", true),
+                new SoundID("FNFIntroGo", true),
+            };
+
             fnfRestart = new SoundID("FNFRestart", true);
 
             MachineConnector.SetRegisteredOI(MOD_ID, new RWF_Options());
@@ -256,15 +333,20 @@ namespace RWF
         {
             GhostTapping = this.config.Bind("fnfghosttapping", true);
 
-            key_note_left = this.config.Bind("fnfkeynoteleft", KeyCode.A);
-            key_note_down = this.config.Bind("fnfkeynotedown", KeyCode.S);
-            key_note_up = this.config.Bind("fnfkeynoteup", KeyCode.W);
-            key_note_right = this.config.Bind("fnfkeynoteright", KeyCode.D);
+            HoldNoteThickness = this.config.Bind("fnfnotethickness", 1f);
 
-            key_note_left_alt = this.config.Bind("fnfkeynoteleft_alt", KeyCode.LeftArrow);
-            key_note_down_alt = this.config.Bind("fnfkeynotedown_alt", KeyCode.DownArrow);
-            key_note_up_alt = this.config.Bind("fnfkeynoteup_alt", KeyCode.UpArrow);
-            key_note_right_alt = this.config.Bind("fnfkeynoteright_alt", KeyCode.RightArrow);
+            key_note = new Configurable<KeyCode>[4];
+            key_note_alt = new Configurable<KeyCode>[4];
+
+            key_note[0] = this.config.Bind("fnfkeynoteleft", KeyCode.A);
+            key_note[1] = this.config.Bind("fnfkeynotedown", KeyCode.S);
+            key_note[2] = this.config.Bind("fnfkeynoteup", KeyCode.W);
+            key_note[3] = this.config.Bind("fnfkeynoteright", KeyCode.D);
+
+            key_note_alt[0] = this.config.Bind("fnfkeynoteleft_alt", KeyCode.LeftArrow);
+            key_note_alt[1] = this.config.Bind("fnfkeynotedown_alt", KeyCode.DownArrow);
+            key_note_alt[2] = this.config.Bind("fnfkeynoteup_alt", KeyCode.UpArrow);
+            key_note_alt[3] = this.config.Bind("fnfkeynoteright_alt", KeyCode.RightArrow);
 
         }
 
@@ -277,6 +359,10 @@ namespace RWF
             };
 
             OpCheckBox OpGhostTap = new OpCheckBox(GhostTapping, new Vector2(45f, 530f));
+            OpFloatSlider opThickness = new OpFloatSlider(HoldNoteThickness, new Vector2(85f, 470f), 260, 2, false);
+
+            opThickness.max = 1f;
+            opThickness.min = 0.1f;
 
             this.Tabs[1].AddItems(new UIelement[]
             {
@@ -284,51 +370,53 @@ namespace RWF
                 new OpLabel(45f, 500f, OptionInterface.Translate("Ghost Tap"), false)
                 {
                     bumpBehav = OpGhostTap.bumpBehav,
-                    description = OptionInterface.Translate("Toggle if only modded intro rolls show up.")
+                },
+
+                opThickness,
+                new OpLabel(45f, 470f, OptionInterface.Translate("Hold Note Thickness"), false)
+                {
+                    bumpBehav = OpGhostTap.bumpBehav,
                 },
             });
 
-            OpKeyBinder OpLeft = new OpKeyBinder(key_note_left, new Vector2(45f, 530f), new Vector2(125, 25));
-            OpKeyBinder OpDown = new OpKeyBinder(key_note_down, new Vector2(45f + (125f), 530f), new Vector2(125, 25));
-            OpKeyBinder OpUp = new OpKeyBinder(key_note_up, new Vector2(45f + (125f * 2), 530f), new Vector2(125, 25));
-            OpKeyBinder OpRight = new OpKeyBinder(key_note_right, new Vector2(45f + (125f * 3), 530f), new Vector2(125, 25));
-
-            this.Tabs[0].AddItems(new UIelement[]
+            for (int i = 0; i < key_note.Length; i++)
             {
-                OpLeft,
-                OpDown,
-                OpUp,
-                OpRight,
-                new OpLabel(45f, 500f, OptionInterface.Translate("Left Key"), false)
+
+                string[] array = new string[]
                 {
-                    bumpBehav = OpLeft.bumpBehav,
-                },
-                new OpLabel(45f + (125f * 1), 500f, OptionInterface.Translate("Down Key"), false)
+                    "Left",
+                    "Down",
+                    "Up",
+                    "Right",
+                };
+
+                OpKeyBinder OpKey = new OpKeyBinder(key_note[i], new Vector2(45f + (130f * i), 530f), new Vector2(125, 25))
                 {
-                    bumpBehav = OpDown.bumpBehav,
-                },
-                new OpLabel(45f + (125f * 2), 500f, OptionInterface.Translate("Up Key"), false)
+                    description = "This is for the " + array[i] + " key",
+                };
+
+                this.Tabs[0].AddItems(new UIelement[]
                 {
-                    bumpBehav = OpUp.bumpBehav,
-                },
-                new OpLabel(45f + (125f * 3), 500f, OptionInterface.Translate("Right Key"), false)
-                {
-                    bumpBehav = OpRight.bumpBehav,
-                },
-            });
+
+                    OpKey,
+
+                    new OpLabel(45f + (130f * i), 500f, OptionInterface.Translate(array[i] + " Key"), false)
+                    {
+                        bumpBehav = OpKey.bumpBehav,
+                        alignment = FLabelAlignment.Center,
+                    },
+
+                });
+            }
 
         }
 
         public static Configurable<bool> GhostTapping;
-        public static Configurable<KeyCode> key_note_left;
-        public static Configurable<KeyCode> key_note_down;
-        public static Configurable<KeyCode> key_note_up;
-        public static Configurable<KeyCode> key_note_right;
 
-        public static Configurable<KeyCode> key_note_left_alt;
-        public static Configurable<KeyCode> key_note_down_alt;
-        public static Configurable<KeyCode> key_note_up_alt;
-        public static Configurable<KeyCode> key_note_right_alt;
+        public static Configurable<float> HoldNoteThickness;
+
+        public static Configurable<KeyCode>[] key_note;
+        public static Configurable<KeyCode>[] key_note_alt;
 
     }
 

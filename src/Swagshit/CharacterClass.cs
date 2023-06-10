@@ -51,6 +51,7 @@ namespace RWF.Swagshit
 
         public bool flipped = false;
         public float size = 1.0f;
+        public Vector2 spriteOffset = Vector2.zero;
 
         public UnityEngine.Vector2 offsetPosition = Vector2.zero;
 
@@ -98,6 +99,7 @@ namespace RWF.Swagshit
 
             }
 
+            this.sprite.scale = Data.scale;
             this.size = Data.scale;
             this.flipped = Data.isFacingRight;
             this.iconName = Data.icon;
@@ -106,6 +108,9 @@ namespace RWF.Swagshit
 
             if (Data.char_name != null)
                 this.Name = Data.char_name;
+
+            if (this.flipped)
+                this.sprite.scaleX *= -1f;
 
         }
 
@@ -178,9 +183,7 @@ namespace RWF.Swagshit
         {
             base.GrafUpdate(timeStacker);
 
-            this.sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos, false, isPlayer ? (this.menu as FunkinMenu).stage.bfscroll : (this.menu as FunkinMenu).stage.dadscroll));
-            this.sprite.scaleX = (flipped ? -size : size) * Plugin.camGameScale;
-            this.sprite.scaleY = size * Plugin.camGameScale;
+            this.sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos + this.spriteOffset, false, isPlayer ? (this.menu as FunkinMenu).stage.bfscroll : (this.menu as FunkinMenu).stage.dadscroll));
 
             if (animations.ContainsKey(curAnim))
             {
