@@ -528,21 +528,23 @@ namespace RWF
 
                     Character character = currentRappers[characterName];
 
-                    if (character.finished | character.curAnim == "idle")
+                    if (character.isPlayer)
                     {
-                        character.PlayAnimation("idle");
+                        if ((character.finished && !keysPressed.ContainsValue(true)) | character.curAnim == "idle")
+                        {
+                            character.PlayAnimation("idle");
+                        }
+                    }
+                    else
+                    {
+                        if (character.finished | character.curAnim == "idle")
+                        {
+                            character.PlayAnimation("idle");
+                        }
                     }
 
                 }
 
-                if (boyfriend.finished | boyfriend.curAnim == "idle")
-                {
-                    boyfriend.PlayAnimation("idle");
-                }
-                if (dad.finished | dad.curAnim == "idle")
-                {
-                    dad.PlayAnimation("idle");
-                }
             }
 
             if (curBeat % camBounceSpeed == 0)
@@ -977,20 +979,34 @@ namespace RWF
                                 playerStrums[note.noteData].sprite.color = Color.Lerp(note.sprite.color, Color.white, 0.65f);
                                 playerStrums[note.noteData].sprSize = 2.65f;
 
-                                switch (note.noteData)
+                                if (!note.no_animation)
                                 {
-                                    case 0:
-                                        boyfriend.PlayAnimation("left" + note.animation_suffix, true);
-                                        break;
-                                    case 1:
-                                        boyfriend.PlayAnimation("down" + note.animation_suffix, true);
-                                        break;
-                                    case 2:
-                                        boyfriend.PlayAnimation("up" + note.animation_suffix, true);
-                                        break;
-                                    case 3:
-                                        boyfriend.PlayAnimation("right" + note.animation_suffix, true);
-                                        break;
+
+                                    var animation_suffix = "";
+
+                                    if (SONG.Sections[curSection] != null)
+                                    {
+                                        if (SONG.Sections[curSection].altAnim && !SONG.Sections[curSection].gfSection)
+                                        {
+                                            animation_suffix = "-alt";
+                                        }
+                                    }
+
+                                    switch (note.noteData)
+                                    {
+                                        case 0:
+                                            boyfriend.PlayAnimation("left" + animation_suffix, true);
+                                            break;
+                                        case 1:
+                                            boyfriend.PlayAnimation("down" + animation_suffix, true);
+                                            break;
+                                        case 2:
+                                            boyfriend.PlayAnimation("up" + animation_suffix, true);
+                                            break;
+                                        case 3:
+                                            boyfriend.PlayAnimation("right" + animation_suffix, true);
+                                            break;
+                                    }
                                 }
 
                                 totalNotesHit++;
