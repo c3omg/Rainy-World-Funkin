@@ -26,6 +26,8 @@ namespace RWF
             new SoundID("FNFIntroGo", true),
         };
 
+        //yo mama so fat, she was thought to be a fucking bump in the road when she died
+
         public static SoundID fnfDeath = new SoundID("FNFDeath", true);
         public static SoundID fnfRestart = new SoundID("FNFRestart", true);
         //FNFRestart 
