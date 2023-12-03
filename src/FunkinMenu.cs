@@ -28,6 +28,7 @@ namespace RWF
         public static event FunkinMenu.hook_missnote OnMiss;
         public static event FunkinMenu.hook_notecreated OnNoteCreated;
         public static event FunkinMenu.hook_stephit OnStepHit;
+        public static event FunkinMenu.hook_updatecameratarget UpdateCameraTarget;
 
         public delegate void hook_beatHit(RWF.FunkinMenu self, int curBeat);
         public delegate void hook_update(RWF.FunkinMenu self);
@@ -38,6 +39,7 @@ namespace RWF
         public delegate void hook_missnote(RWF.FunkinMenu self, Swagshit.Note daNote);
         public delegate void hook_notecreated(FunkinMenu self, RWF.Swagshit.Note daNote);
         public delegate void hook_stephit(FunkinMenu self, int curStep);
+        public delegate void hook_updatecameratarget(RWF.FunkinMenu self);
 
         // Varibles
 
@@ -96,6 +98,7 @@ namespace RWF
         public FLX_BAR bar;
 
         public UnityEngine.Vector2 cameraPosiion = new(0, 0);
+        public UnityEngine.Vector2 cameraTarget = new(0, 0);
 
         private int lastBeat = 0;
         private int lastStep = 0;
@@ -853,12 +856,19 @@ namespace RWF
                 if (curBeat >= 0 && SONG.Sections.Count > curBeat / 4)
                 {
                     if (SONG.Sections[curBeat / 4].mustHitSection)
-                        cameraPosiion = UnityEngine.Vector2.Lerp(cameraPosiion, boyfriendlass, stage.camSpeed);
+                        cameraTarget = boyfriendlass;
                     else
-                        cameraPosiion = UnityEngine.Vector2.Lerp(cameraPosiion, dadlass, stage.camSpeed);
+                        cameraTarget = dadlass;
                 }
-                else cameraPosiion = UnityEngine.Vector2.Lerp(cameraPosiion, dadlass, stage.camSpeed);
+                else cameraTarget = dadlass;
 
+                if (UpdateCameraTarget != null)
+                {
+                    FunkinMenu.UpdateCameraTarget(this);
+                }
+
+                cameraPosiion = UnityEngine.Vector2.Lerp(cameraPosiion, cameraTarget, stage.camSpeed);
+                
                 hpIconP1.Size = new Vector2(Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)), Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)));
                 hpIconP2.Size = new Vector2(Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)), Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)));
 
