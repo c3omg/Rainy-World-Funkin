@@ -1,19 +1,69 @@
 {
 	"animations" : [
-		["idle", "the_rapper_idle", 7, false], 
-		["left", "the_rapper_left", 7, false], 
-		["down", "the_rapper_down", 7, false], 
-		["up", "the_rapper_up", 7, false], 
-		["right", "the_rapper_right", 7, false], 
-		["left-miss", "the_rapper_leftmiss", 11, false], 
-		["down-miss", "the_rapper_downmiss", 11, false], 
-		["up-miss", "the_rapper_upmiss", 11, false], 
-		["right-miss", "the_rapper_rightmiss", 11, false], 
-		["Death", "the_rapper_die", 3, false],
+		{
+			"anim": "idle",
+			"elementName": "the_rapper_idle",
+			"loops": false,
+			"framerate": 13
+		},
+		{
+			"anim": "left",
+			"elementName": "the_rapper_left",
+			"loops": false,
+			"framerate": 13
+		}, 
+		{
+			"anim": "down",
+			"elementName": "the_rapper_down",
+			"loops": false,
+			"framerate": 13
+		}, 
+		{
+			"anim": "up",
+			"elementName": "the_rapper_up",
+			"loops": false,
+			"framerate": 13
+		}, 
+		{
+			"anim": "right",
+			"elementName": "the_rapper_right",
+			"loops": false,
+			"framerate": 13
+		}, 
+		{
+			"anim": "left-miss",
+			"elementName": "the_rapper_leftmiss",
+			"loops": false,
+			"framerate": 22
+		}, 
+		{
+			"anim": "down-miss",
+			"elementName": "the_rapper_downmiss",
+			"loops": false,
+			"framerate": 22
+		}, 
+		{
+			"anim": "up-miss",
+			"elementName": "the_rapper_upmiss",
+			"loops": false,
+			"framerate": 22
+		}, 
+		{
+			"anim": "right-miss",
+			"elementName": "the_rapper_rightmiss",
+			"loops": false,
+			"framerate": 22
+		}, 
+		{
+			"anim": "Death",
+			"elementName": "the_rapper_die",
+			"loops": false,
+			"framerate": 6
+		}
 	],
 	"scale" : 1.65,
 	"icon" : "bf",
 	"isFacingRight" : true,
 	"character_image" : "characters/the_rapper",
-	"GlobalPosition" : [0, 10],
+	"GlobalPosition" : [0, 10]
 }

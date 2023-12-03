@@ -1,8 +1,8 @@
 {
-  "Title": "a wacky fnf mod",
-  "Description": "HELL\r\n\r\nA recreation of the fnf engine in rain world, currently doesnt have alot of songs, but it does have modding support\r\n\r\nCurrent Update:\r\n\r\n- Added code mod support\r\n    - now you can hook onto the mod funkingame instance\r\n    - which means you can add modcharts now",
+  "Title": "Rainy World Funkin\u0027",
+  "Description": "HELL\r\n\r\nA recreation of the fnf engine in rain world, currently doesnt have alot of songs, but it does have modding support",
   "ID": "silky.rwf",
-  "Version": "0.2.0",
+  "Version": "0.4.1",
   "TargetGameVersion": "v1.9.06",
   "Requirements": "",
   "RequirementNames": "",
@@ -12,5 +12,6 @@
     "Game Modes"
   ],
   "WorkshopID": 2982041239,
-  "UploadFilesOnly": false
+  "UploadFilesOnly": false,
+  "UploadThumbnail": false
 }

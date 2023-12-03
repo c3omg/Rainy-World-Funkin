@@ -1,6 +1,11 @@
 {
 	"pieces" : [
-		["Futile_White", -225, -225, 175, 175, 0, 0]
+		{
+			"spr_name": "Futile_White",
+			"pos": {"x": -225, "y": -225},
+			"scale": {"x": 175, "y": 175},
+			"scroll": {"x": 0, "y": 0}
+		}
 	],
 	"zoom" : 0.9,
 	"bop_speed" : 1,

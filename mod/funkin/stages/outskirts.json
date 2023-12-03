@@ -1,9 +1,29 @@
 {
 	"pieces" : [
-		["outskirts/sky", 0, 0, 1, 2, 0, 0],
-		["outskirts/buildings", 75, 0, 1.3, 1, 0.35, 0.35],
-		["outskirts/hills", -75, 0, 1.65, 1, 0.6, 0.6],
-		["outskirts/ground", -250, -200, 12, 2, 0.9, 0.9]
+		{
+			"spr_name": "outskirts/sky",
+			"pos": {"x": 0, "y": 0},
+			"scale": {"x": 1, "y": 2},
+			"scroll": {"x": 0, "y": 0}
+		},
+		{
+			"spr_name": "outskirts/buildings",
+			"pos": {"x": 75, "y": 0},
+			"scale": {"x": 1.3, "y": 1},
+			"scroll": {"x": 0.35, "y": 0.35}
+		},
+		{
+			"spr_name": "outskirts/hills",
+			"pos": {"x": -75, "y": 0},
+			"scale": {"x": 1.65, "y": 1},
+			"scroll": {"x": 0.6, "y": 0.6}
+		},
+		{
+			"spr_name": "outskirts/ground",
+			"pos": {"x": -250, "y": -200},
+			"scale": {"x": 12, "y": 2},
+			"scroll": {"x": 0.9, "y": 0.9}
+		}
 	],
-	"zoom" : 1.25,
+	"zoom" : 1.25
 }

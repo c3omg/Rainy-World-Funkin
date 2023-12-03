@@ -1,15 +1,40 @@
 {
 	"animations" : [
-		["idle", "inv_datingsim_idle", 19, false], 
-		["left", "inv_datingsim_left", 19, false], 
-		["down", "inv_datingsim_down", 19, false], 
-		["up", "inv_datingsim_up", 19, false], 
-		["right", "inv_datingsim_right", 19, false], 
+		{
+			"anim": "idle",
+			"elementName": "inv_datingsim_idle",
+			"loops": false,
+			"framerate": 24
+		},
+		{
+			"anim": "left",
+			"elementName": "inv_datingsim_left",
+			"loops": false,
+			"framerate": 24
+		}, 
+		{
+			"anim": "down",
+			"elementName": "inv_datingsim_down",
+			"loops": false,
+			"framerate": 24
+		}, 
+		{
+			"anim": "up",
+			"elementName": "inv_datingsim_up",
+			"loops": false,
+			"framerate": 24
+		}, 
+		{
+			"anim": "right",
+			"elementName": "inv_datingsim_right",
+			"loops": false,
+			"framerate": 24
+		}
 	],
 	"scale" : 0.85,
 	"icon" : "inv",
 	"isFacingRight" : true,
 	"character_image" : "characters/inv_datingsim",
 	"GlobalPosition" : [0, 0],
-	"CameraOffset" : [45, 5],
+	"CameraOffset" : [45, 5]
 }

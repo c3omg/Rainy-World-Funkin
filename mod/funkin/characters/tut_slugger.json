@@ -1,14 +1,39 @@
 {
 	"animations" : [
-		["idle", "idle", 25, false], 
-		["left", "left", 25, false], 
-		["down", "down", 25, false], 
-		["up", "up", 25, false], 
-		["right", "right", 25, false], 
+		{
+			"anim": "idle",
+			"elementName": "idle",
+			"loops": false,
+			"framerate": 15
+		},
+		{
+			"anim": "left",
+			"elementName": "left",
+			"loops": false,
+			"framerate": 15
+		}, 
+		{
+			"anim": "down",
+			"elementName": "down",
+			"loops": false,
+			"framerate": 15
+		}, 
+		{
+			"anim": "up",
+			"elementName": "up",
+			"loops": false,
+			"framerate": 15
+		}, 
+		{
+			"anim": "right",
+			"elementName": "right",
+			"loops": false,
+			"framerate": 15
+		}
 	],
 	"scale" : 2.5,
 	"icon" : "tut_slugger",
 	"isFacingRight" : false,
 	"character_image" : "characters/tut_scug",
-	"GlobalPosition" : [0, 0],
+	"GlobalPosition" : [0, 0]
 }

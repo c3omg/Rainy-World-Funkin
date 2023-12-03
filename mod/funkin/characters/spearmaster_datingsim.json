@@ -1,11 +1,16 @@
 {
 	"animations" : [
-		["idle", "spearmaster_datingsim_idle", 4, true], 
+		{
+			"anim": "idle",
+			"elementName": "spearmaster_datingsim_idle",
+			"loops": true,
+			"framerate": 6
+		}
 	],
 	"scale" : 0.85,
 	"icon" : "spearmaster_datingsim",
 	"isFacingRight" : false,
 	"character_image" : "characters/spearmaster_datingsim",
 	"GlobalPosition" : [0, 0],
-	"CameraOffset" : [-45, 5],
+	"CameraOffset" : [-45, 5]
 }

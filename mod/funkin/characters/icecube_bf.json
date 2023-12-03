@@ -1,14 +1,39 @@
 {
 	"animations" : [
-		["idle", "icechewer_boyfriend_idle", 16, false], 
-		["left", "icechewer_boyfriend_left", 16, false], 
-		["down", "icechewer_boyfriend_down", 16, false], 
-		["up", "icechewer_boyfriend_up", 16, false], 
-		["right", "icechewer_boyfriend_right", 16, false], 
+		{
+			"anim": "idle",
+			"elementName": "icechewer_boyfriend_idle",
+			"loops": false,
+			"framerate": 12
+		},
+		{
+			"anim": "left",
+			"elementName": "icechewer_boyfriend_left",
+			"loops": false,
+			"framerate": 12
+		}, 
+		{
+			"anim": "down",
+			"elementName": "icechewer_boyfriend_down",
+			"loops": false,
+			"framerate": 12
+		}, 
+		{
+			"anim": "up",
+			"elementName": "icechewer_boyfriend_up",
+			"loops": false,
+			"framerate": 12
+		}, 
+		{
+			"anim": "right",
+			"elementName": "icechewer_boyfriend_right",
+			"loops": false,
+			"framerate": 12
+		}
 	],
 	"scale" : 3.5,
 	"icon" : "icecube_boyfriend",
 	"isFacingRight" : false,
 	"character_image" : "characters/icecube_boyfriend",
-	"GlobalPosition" : [0, 0],
+	"GlobalPosition" : [0, 0]
 }

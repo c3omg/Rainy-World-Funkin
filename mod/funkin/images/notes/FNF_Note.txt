@@ -7,29 +7,37 @@
     "sourceSize": { "w": 64, "h": 64 },
     "duration": 100
    },
+   "Note": {
+    "frame": { "x": 64, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
    "HoldNote": {
-    "frame": { "x": 64, "y": 0, "w": 32, "h": 32 },
+    "frame": { "x": 128, "y": 0, "w": 32, "h": 48 },
     "rotated": false,
     "trimmed": true,
-    "spriteSourceSize": { "x": 16, "y": 16, "w": 32, "h": 32 },
+    "spriteSourceSize": { "x": 16, "y": 16, "w": 32, "h": 48 },
     "sourceSize": { "w": 64, "h": 64 },
     "duration": 100
    },
    "HoldEnd": {
-    "frame": { "x": 96, "y": 0, "w": 32, "h": 32 },
+    "frame": { "x": 160, "y": 0, "w": 32, "h": 48 },
     "rotated": false,
     "trimmed": true,
-    "spriteSourceSize": { "x": 16, "y": 16, "w": 32, "h": 32 },
+    "spriteSourceSize": { "x": 16, "y": 16, "w": 32, "h": 48 },
     "sourceSize": { "w": 64, "h": 64 },
     "duration": 100
    }
  },
  "meta": {
   "app": "https://www.aseprite.org/",
-  "version": "1.3-rc4-x64",
+  "version": "1.3.2-x64",
   "image": "FNF_Note.png",
   "format": "RGBA8888",
-  "size": { "w": 128, "h": 64 },
+  "size": { "w": 192, "h": 64 },
   "scale": "1"
  }
 }

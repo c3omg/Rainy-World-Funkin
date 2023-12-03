@@ -23,6 +23,22 @@
     "sourceSize": { "w": 256, "h": 256 },
     "duration": 100
    },
+   "icechewer_saint_left_2": {
+    "frame": { "x": 256, "y": 0, "w": 128, "h": 160 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 32, "y": 80, "w": 128, "h": 160 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_saint_left_3": {
+    "frame": { "x": 256, "y": 0, "w": 128, "h": 160 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 32, "y": 80, "w": 128, "h": 160 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
    "icechewer_saint_down_0": {
     "frame": { "x": 0, "y": 160, "w": 128, "h": 160 },
     "rotated": false,
@@ -32,6 +48,22 @@
     "duration": 100
    },
    "icechewer_saint_down_1": {
+    "frame": { "x": 128, "y": 160, "w": 128, "h": 160 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 32, "y": 80, "w": 128, "h": 160 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_saint_down_2": {
+    "frame": { "x": 128, "y": 160, "w": 128, "h": 160 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 32, "y": 80, "w": 128, "h": 160 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_saint_down_3": {
     "frame": { "x": 128, "y": 160, "w": 128, "h": 160 },
     "rotated": false,
     "trimmed": true,
@@ -55,6 +87,22 @@
     "sourceSize": { "w": 256, "h": 256 },
     "duration": 100
    },
+   "icechewer_saint_up_2": {
+    "frame": { "x": 0, "y": 320, "w": 128, "h": 160 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 32, "y": 80, "w": 128, "h": 160 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_saint_up_3": {
+    "frame": { "x": 0, "y": 320, "w": 128, "h": 160 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 32, "y": 80, "w": 128, "h": 160 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
    "icechewer_saint_right_0": {
     "frame": { "x": 128, "y": 320, "w": 128, "h": 160 },
     "rotated": false,
@@ -64,6 +112,22 @@
     "duration": 100
    },
    "icechewer_saint_right_1": {
+    "frame": { "x": 256, "y": 320, "w": 128, "h": 160 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 32, "y": 80, "w": 128, "h": 160 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_saint_right_2": {
+    "frame": { "x": 256, "y": 320, "w": 128, "h": 160 },
+    "rotated": false,
+    "trimmed": true,
+    "spriteSourceSize": { "x": 32, "y": 80, "w": 128, "h": 160 },
+    "sourceSize": { "w": 256, "h": 256 },
+    "duration": 100
+   },
+   "icechewer_saint_right_3": {
     "frame": { "x": 256, "y": 320, "w": 128, "h": 160 },
     "rotated": false,
     "trimmed": true,
@@ -81,10 +145,10 @@
   "scale": "1",
   "frameTags": [
    { "name": "idle", "from": 0, "to": 0, "direction": "forward", "color": "#000000ff" },
-   { "name": "left", "from": 1, "to": 2, "direction": "forward", "color": "#000000ff" },
-   { "name": "down", "from": 3, "to": 4, "direction": "forward", "color": "#000000ff" },
-   { "name": "up", "from": 5, "to": 6, "direction": "forward", "color": "#000000ff" },
-   { "name": "right", "from": 7, "to": 8, "direction": "forward", "color": "#000000ff" }
+   { "name": "left", "from": 1, "to": 4, "direction": "forward", "color": "#000000ff" },
+   { "name": "down", "from": 5, "to": 8, "direction": "forward", "color": "#000000ff" },
+   { "name": "up", "from": 9, "to": 12, "direction": "forward", "color": "#000000ff" },
+   { "name": "right", "from": 13, "to": 16, "direction": "forward", "color": "#000000ff" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },
