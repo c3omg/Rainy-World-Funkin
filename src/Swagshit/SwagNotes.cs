@@ -60,7 +60,13 @@ namespace RWF.Swagshit
 
             this.sprite.element = Futile.atlasManager.GetElementWithName(altmode ? "note_splash_alt_" + frame : "note_splash_" + frame);
 
-            if (frameCounter == (40 / 14))
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (frameCounter == 3)
             {
 
                 this.frame++;
@@ -72,11 +78,10 @@ namespace RWF.Swagshit
                 this.Destroy();
             else
                 frameCounter++;
-
         }
 
         private int frame = 0;
-        private int framecap = 0;
+        private int framecap = 5;
         private int frameCounter = 0;
 
         public FSprite sprite;
@@ -113,7 +118,12 @@ namespace RWF.Swagshit
         public Note nextNote;
         public bool IsSusNote = false;
 
+        public string animation_suffix = "";
+
+        public string noteType = "";
+
         public bool no_animation = false;
+        public bool noMissAnimation = false;
 
         private bool lastsus = false;
 
@@ -152,27 +162,24 @@ namespace RWF.Swagshit
                     sprite = new("HoldEnd", true);
                 else
                     sprite = new("HoldNote", true);
-                sprite.SetAnchor(0.5f, 0f);
+                sprite.SetAnchor(0.5f, 0.5f);
             }
             else
             {
-                sprite = new("StrumNote_0", true);
+                sprite = new("Note", true);
 
-                sprite.SetAnchor(0.5f, 0f);
+                sprite.SetAnchor(0.5f, 0.5f);
 
                 switch (leData)
                 {
                     case 0:
                         sprite.rotation = -90;
-                        sprite.SetAnchor(0f, 0.5f);
                         break;
                     case 1:
                         sprite.rotation = 180;
-                        sprite.SetAnchor(0.5f, 1f);
                         break;
                     case 3:
                         sprite.rotation = 90;
-                        sprite.SetAnchor(1f, 0.5f);
                         break;
                 }
 
@@ -250,22 +257,19 @@ namespace RWF.Swagshit
         public override void GrafUpdate(float timestacker)
         {
             base.GrafUpdate(timestacker);
-
-            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos, true));
-            sprite.scale = 2.5f * Plugin.camHUDScale;
-            
-            if (IsSusNote)
+            this.sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos, true, default(Vector2)));
+            this.sprite.scale = 2.5f * Plugin.camHUDScale;
+            bool isSusNote = this.IsSusNote;
+            if (isSusNote)
             {
-                sprite.scaleX = 2.5f * RWF_Options.HoldNoteThickness.Value;
-                sprite.scaleY = length * Plugin.camHUDScale;
+                this.sprite.scaleX = 2.5f * RWF_Options.HoldNoteThickness.Value;
+                this.sprite.scaleY = this.length * Plugin.camHUDScale;
             }
-
-
         }
 
+        public bool gfNote = false;
         private int[] animation_frames;
         private int[] animation_framecap;
-
         public FSprite sprite;
 
     }
@@ -305,6 +309,8 @@ namespace RWF.Swagshit
                     break;
             }
 
+            sprite.anchorX = sprite.anchorY = 0.5f;
+
             sprite.scale = sprSize;
             //sprite.SetAnchor(0.5f, 0.5f);
             sprite.color = new Color(.75f, .75f, .75f);
@@ -333,6 +339,80 @@ namespace RWF.Swagshit
 
         public FSprite sprite;
 
+    }
+
+    public class Rating : MenuObject
+    {
+        // Token: 0x06000080 RID: 128 RVA: 0x00008DD8 File Offset: 0x00006FD8
+        public Rating(Menu.Menu menu, MenuObject menuObject, string rating, Vector2 pos = default(Vector2)) : base(menu, menuObject)
+        {
+            Futile.atlasManager.LoadImage("funkin/images/ratings/" + rating);
+            this.sprite = new FSprite("funkin/images/ratings/" + rating, true)
+            {
+                scale = 1.5f
+            };
+            this.pos = pos;
+            this.Container.AddChild(this.sprite);
+        }
+
+        // Token: 0x06000081 RID: 129 RVA: 0x00008E6C File Offset: 0x0000706C
+        public void Destroy()
+        {
+            bool flag = this.sprite != null;
+            if (flag)
+            {
+                this.Container.RemoveChild(this.sprite);
+            }
+            bool flag2 = this.owner != null;
+            if (flag2)
+            {
+                base.page.subObjects.Remove(this);
+            }
+        }
+
+        // Token: 0x06000082 RID: 130 RVA: 0x00008EB8 File Offset: 0x000070B8
+        public override void Update()
+        {
+            this.pos += this.vel;
+            this.vel += this.acc;
+            this.lifecounter++;
+            bool flag = this.sprite.alpha <= 0f && this.lifecounter >= 200;
+            if (flag)
+            {
+                this.Destroy();
+            }
+            else
+            {
+                bool flag2 = this.lifecounter > 15;
+                if (flag2)
+                {
+                    this.sprite.alpha -= 0.025f;
+                }
+                base.Update();
+            }
+        }
+
+        // Token: 0x06000083 RID: 131 RVA: 0x00008F62 File Offset: 0x00007162
+        public override void GrafUpdate(float timestacker)
+        {
+            base.GrafUpdate(timestacker);
+            this.sprite.SetPosition(this.pos);
+        }
+
+        // Token: 0x040000A2 RID: 162
+        public Vector2 pos = Vector2.zero;
+
+        // Token: 0x040000A3 RID: 163
+        public Vector2 vel = Vector2.zero;
+
+        // Token: 0x040000A4 RID: 164
+        public Vector2 acc = Vector2.zero;
+
+        // Token: 0x040000A5 RID: 165
+        public int lifecounter = 0;
+
+        // Token: 0x040000A6 RID: 166
+        public FSprite sprite;
     }
 
 }

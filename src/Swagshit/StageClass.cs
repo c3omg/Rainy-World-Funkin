@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Menu;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace RWF.Swagshit
@@ -8,7 +11,7 @@ namespace RWF.Swagshit
     public class StageJSON
     {
 
-        public List<string[]> pieces = new List<string[]> { }; // spr_name, x, y, scaleX, scaleY, scrollX, scrollY
+        public List<StagePieces> pieces = new List<StagePieces>();
         public float[] bf_scroll = new float[] { 1, 1 };
         public float[] dad_scroll = new float[] { 1, 1 };
         public float[] bf_pos = new float[] { 1100, 175 };
@@ -19,6 +22,21 @@ namespace RWF.Swagshit
         public float camSpeed = 0.05f;
 
         public StageJSON() { }
+
+        public class StagePieces
+        {
+            // Token: 0x0400010E RID: 270
+            public string spr_name;
+
+            // Token: 0x0400010F RID: 271
+            public Vector2 pos = Vector2.zero;
+
+            // Token: 0x04000110 RID: 272
+            public Vector2 scale = Vector2.zero;
+
+            // Token: 0x04000111 RID: 273
+            public Vector2 scroll = Vector2.zero;
+        }
     }
 
     public class Stage : Menu.MenuObject
@@ -29,6 +47,7 @@ namespace RWF.Swagshit
         public UnityEngine.Vector2 bf_pos = new(1, 1);
         public UnityEngine.Vector2 dad_pos = new(1, 1);
         public Color textColorOverride = Color.white;
+        private int failedattempts = 0;
         public float camSpeed = 0.1f;
         public int bop_speed = 2;
 
@@ -39,36 +58,58 @@ namespace RWF.Swagshit
 
         public Stage(Menu.Menu menu, Menu.MenuObject owner, string rawData) : base(menu, owner)
         {
+            this.LoadFromJSON(rawData);
+        }
 
-            var Data = JsonConvert.DeserializeObject<StageJSON>(rawData);
-
-            foreach (string[] v in Data.pieces)
+        public void LoadFromJSON(string rawData)
+        {
+            bool flag = this.sprites != null && this.sprites.Count > 0;
+            if (flag)
             {
-
-                UnityEngine.Vector2 vector = new(float.Parse(v[1]), float.Parse(v[2]));
-
-                FSprite sprite = new FSprite(v[0]);
-                sprite.SetAnchor(0, 0);
-                sprite.SetPosition(vector);
-
-                sprites.Add(sprite);
-                spritePostions.Add(sprite, vector);
-                spriteScrollFactor.Add(sprite, new(float.Parse(v[5]), float.Parse(v[6])));
-                spriteSize.Add(sprite, new(float.Parse(v[3]), float.Parse(v[4])));
-
-                this.Container.AddChild(sprite);
-
+                foreach (FSprite fp in this.sprites)
+                {
+                    this.Container.RemoveChild(fp);
+                }
             }
-
-            this.camZoom = Data.zoom;
-            this.bfscroll = new(Data.bf_scroll[0], Data.bf_scroll[1]);
-            this.dadscroll = new(Data.dad_scroll[0], Data.dad_scroll[1]);
-            this.textColorOverride = new Color(Data.textColorOverride[0] /255, Data.textColorOverride[1] /255, Data.textColorOverride[2] /255);
-            this.bf_pos = new(Data.bf_pos[0], Data.bf_pos[1]);
-            this.dad_pos = new(Data.dad_pos[0], Data.dad_pos[1]);
-            this.bop_speed = Data.bop_speed;
-            this.camSpeed = Data.camSpeed;
-
+            this.sprites.Clear();
+            this.spriteScrollFactor.Clear();
+            this.spritePostions.Clear();
+            try
+            {
+                StageJSON Data = JsonConvert.DeserializeObject<StageJSON>(rawData);
+                foreach (StageJSON.StagePieces v in Data.pieces)
+                {
+                    Vector2 vector = v.pos;
+                    FSprite sprite = new FSprite(v.spr_name, true);
+                    sprite.SetAnchor(0f, 0f);
+                    sprite.SetPosition(vector);
+                    sprite.scaleX = v.scale.x;
+                    sprite.scaleY = v.scale.y;
+                    this.sprites.Add(sprite);
+                    this.spritePostions.Add(sprite, vector);
+                    this.spriteScrollFactor.Add(sprite, v.scroll);
+                    this.spriteSize.Add(sprite, v.scale);
+                    this.Container.AddChild(sprite);
+                }
+                this.camZoom = Data.zoom;
+                this.bfscroll = new Vector2(Data.bf_scroll[0], Data.bf_scroll[1]);
+                this.dadscroll = new Vector2(Data.dad_scroll[0], Data.dad_scroll[1]);
+                this.textColorOverride = new Color(Data.textColorOverride[0] / 255f, Data.textColorOverride[1] / 255f, Data.textColorOverride[2] / 255f);
+                this.bf_pos = new Vector2(Data.bf_pos[0], Data.bf_pos[1]);
+                this.dad_pos = new Vector2(Data.dad_pos[0], Data.dad_pos[1]);
+                this.bop_speed = Data.bop_speed;
+                this.camSpeed = Data.camSpeed;
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(string.Format("RWF MODDING: HAD A FAIL WHILE LOADING STAGE || Exception logged : {0}", ex));
+                bool flag2 = this.failedattempts < 6;
+                if (flag2)
+                {
+                    this.LoadFromJSON(File.ReadAllText(AssetManager.ResolveFilePath("funkin/stages/outskirts.json")));
+                    this.failedattempts++;
+                }
+            }
         }
 
         public override void GrafUpdate(float timeStacker)

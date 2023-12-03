@@ -1,5 +1,6 @@
 ﻿using Menu;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace RWF.Swagshit
     public class CharacterJSON
     {
 
-        public List<string[]> animations = new List<string[]> { };
+        public List<Animation> animations = new List<Animation>();
         public float scale = 2.5f;
         public string icon = "tut_slugger";
         public bool isFacingRight = false;
@@ -23,11 +24,19 @@ namespace RWF.Swagshit
         {
         }
 
+        public class Animation
+        {
+            public string anim;
+            public string elementName = "Futile_White";
+            public bool loops = false;
+            public int framerate = 40;
+        }
+
     }
 
     public class Character : Menu.MenuObject
     {
-        private Dictionary<string, string> animations = new Dictionary<string, string> { };
+        public Dictionary<string, string> animations = new Dictionary<string, string> { };
         private Dictionary<string, int> FRAME_MAXS = new Dictionary<string, int> { };
         private Dictionary<string, int> ANIM_FRATE = new Dictionary<string, int> { };
         private Dictionary<string, bool> ANIM_LOOPABLES = new Dictionary<string, bool> { };
@@ -39,6 +48,8 @@ namespace RWF.Swagshit
         public int frame = 0;
         public int framerate = 40;
         private int frameCounter = 0;
+        public CharacterJSON json;
+        private int failedattempts = 0;
         public Vector2 pos = Vector2.zero;
         public Vector2 CameraOffset = Vector2.zero;
         public bool finished = true;
@@ -82,36 +93,47 @@ namespace RWF.Swagshit
 
         public void LoadCharacterDataFromRawData(string rawData)
         {
-
-            var Data = JsonConvert.DeserializeObject<CharacterJSON>(rawData);
-
-            var imagePath = AssetManager.ResolveFilePath("funkin/images/" + Data.character_image);
-
-            if (!Futile.atlasManager.DoesContainAtlas(Path.GetFileNameWithoutExtension(imagePath)))
-            { // i have a bad feeling of this, something tells me this isnt good, but oh well, allows for custom atlas without a dll file
-                Futile.atlasManager.LoadAtlas("funkin/images/" + Data.character_image);
-            }
-
-            foreach (string[] v in Data.animations)
+            try
             {
-
-                this.AddAnimation(v[0], v[1], AttemptToGuessMaxNumberOfFrames(v[1]), int.Parse(v[2]), bool.Parse(v[3]));
-
+                CharacterJSON Data = JsonConvert.DeserializeObject<CharacterJSON>(rawData);
+                this.json = Data;
+                string imagePath = AssetManager.ResolveFilePath("funkin/images/" + Data.character_image);
+                bool flag = !Futile.atlasManager.DoesContainAtlas(Path.GetFileNameWithoutExtension(imagePath));
+                if (flag)
+                {
+                    Futile.atlasManager.LoadAtlas("funkin/images/" + Data.character_image);
+                }
+                foreach (CharacterJSON.Animation v in Data.animations)
+                {
+                    this.AddAnimation(v.anim, v.elementName, Character.AttemptToGuessMaxNumberOfFrames(v.elementName), v.framerate, v.loops);
+                }
+                this.sprite.scale = Data.scale;
+                this.size = Data.scale;
+                this.flipped = Data.isFacingRight;
+                this.iconName = Data.icon;
+                this.CameraOffset = new Vector2(Data.CameraOffset[0], Data.CameraOffset[1]);
+                this.offsetPosition = new Vector2(Data.GlobalPosition[0], Data.GlobalPosition[1]);
+                bool flag2 = Data.char_name != null;
+                if (flag2)
+                {
+                    this.Name = Data.char_name;
+                }
+                bool flag3 = this.flipped;
+                if (flag3)
+                {
+                    this.sprite.scaleX *= -1f;
+                }
             }
-
-            this.sprite.scale = Data.scale;
-            this.size = Data.scale;
-            this.flipped = Data.isFacingRight;
-            this.iconName = Data.icon;
-            this.CameraOffset = new(Data.CameraOffset[0], Data.CameraOffset[1]);
-            this.offsetPosition = new(Data.GlobalPosition[0], Data.GlobalPosition[1]);
-
-            if (Data.char_name != null)
-                this.Name = Data.char_name;
-
-            if (this.flipped)
-                this.sprite.scaleX *= -1f;
-
+            catch (Exception ex)
+            {
+                Debug.Log(string.Format("RWF MODDING: HAD A FAIL WHILE LOADING RAPPER || Exception logged : {0}", ex));
+                bool flag4 = this.failedattempts < 6;
+                if (flag4)
+                {
+                    this.LoadCharacterDataFromRawData(File.ReadAllText(AssetManager.ResolveFilePath("funkin/characters/tut_slugger.json")));
+                    this.failedattempts++;
+                }
+            }
         }
 
         public Character(Menu.Menu menu, Menu.MenuObject owner) : base(menu, owner) // why would you ever want to create a character manually????
@@ -159,13 +181,11 @@ namespace RWF.Swagshit
 
         public void PlayAnimation(string name, bool forced = false)
         {
-
+            
             if (this.flipped)
             {
-                if (name == "left") name = "right";
-                else if (name == "right") name = "left";
-                else if (name == "left-miss") name = "right-miss";
-                else if (name == "right-miss") name = "left-miss";
+                if (name.StartsWith("left")) name = name.Replace("left", "right");
+                else if (name.StartsWith("right")) name = name.Replace("right", "left");
             }
 
             if (!animations.ContainsKey(name)) return;
@@ -183,13 +203,21 @@ namespace RWF.Swagshit
         {
             base.GrafUpdate(timeStacker);
 
-            this.sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos + this.spriteOffset, false, isPlayer ? (this.menu as FunkinMenu).stage.bfscroll : (this.menu as FunkinMenu).stage.dadscroll));
+            if (menu is FunkinMenu)
+                this.sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos + this.spriteOffset, false, isPlayer ? (this.menu as FunkinMenu).stage.bfscroll : (this.menu as FunkinMenu).stage.dadscroll));
+            else
+                this.sprite.SetPosition(this.pos + this.spriteOffset);
+        }
+
+        public override void Update()
+        {
+            base.Update();
 
             if (animations.ContainsKey(curAnim))
             {
                 this.sprite.element = Futile.atlasManager.GetElementWithName(animations[curAnim] + "_" + frame);
 
-                if (frameCounter == (40 / this.framerate))
+                if (frameCounter == (60 / this.framerate))
                 {
 
                     if (!ANIM_LOOPABLES[curAnim])
@@ -234,22 +262,15 @@ namespace RWF.Swagshit
 
         public HealthIcon(Menu.Menu menu, MenuObject owner, string elementName) : base(menu, owner)
         {
+
+            if (!File.Exists(AssetManager.ResolveFilePath("funkin/images/icons/icon-" + elementName + ".png")))
+            {
+                elementName = "tut_slugger";
+            }
+
             if (!Futile.atlasManager.DoesContainElementWithName("funkin/images/icons/icon-" + elementName))
             {
-
-                if (!File.Exists(AssetManager.ResolveFilePath("funkin/images/icons/icon-" + elementName + ".png")))
-                {
-                    elementName = "tut_slugger";
-
-                    if (!Futile.atlasManager.DoesContainElementWithName("funkin/images/icons/icon-" + elementName))
-                        Futile.atlasManager.LoadImage("funkin/images/icons/icon-" + elementName);
-
-                }
-                else
-                {
-                    Futile.atlasManager.LoadImage("funkin/images/icons/icon-" + elementName);
-                }
-
+                Futile.atlasManager.LoadImage("funkin/images/icons/icon-" + elementName);
             }
 
             sprite = new FSprite("funkin/images/icons/icon-" + elementName);
@@ -287,7 +308,7 @@ namespace RWF.Swagshit
     {
 
         public UnityEngine.Vector2 pos;
-        public static UnityEngine.Vector2 wantedsize = new(7, 3.5f);
+        public static UnityEngine.Vector2 wantedsize = new(15, 3.5f);
         public UnityEngine.Vector2 Size = wantedsize;
         public bool flipped = false;
 

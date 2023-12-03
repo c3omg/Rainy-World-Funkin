@@ -7,3 +7,12 @@ C:\Users\USER\source\repos\Rain World\Rainy night funkin\src\bin\Debug\net48\RWF
 C:\Users\USER\source\repos\Rain World\Rainy night funkin\src\bin\Debug\net48\RWF.pdb
 C:\Users\USER\source\repos\Rain World\Rainy night funkin\src\obj\Debug\net48\RWF.dll
 C:\Users\USER\source\repos\Rain World\Rainy night funkin\src\obj\Debug\net48\RWF.pdb
+C:\Users\Admin\Documents\RAINWORLD\Rainy-World-Funkin-master\src\bin\Debug\net48\RWF.dll
+C:\Users\Admin\Documents\RAINWORLD\Rainy-World-Funkin-master\src\bin\Debug\net48\RWF.pdb
+C:\Users\Admin\Documents\RAINWORLD\Rainy-World-Funkin-master\src\obj\Debug\net48\RWF.csproj.AssemblyReference.cache
+C:\Users\Admin\Documents\RAINWORLD\Rainy-World-Funkin-master\src\obj\Debug\net48\RWF.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Documents\RAINWORLD\Rainy-World-Funkin-master\src\obj\Debug\net48\RWF.AssemblyInfoInputs.cache
+C:\Users\Admin\Documents\RAINWORLD\Rainy-World-Funkin-master\src\obj\Debug\net48\RWF.AssemblyInfo.cs
+C:\Users\Admin\Documents\RAINWORLD\Rainy-World-Funkin-master\src\obj\Debug\net48\RWF.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Documents\RAINWORLD\Rainy-World-Funkin-master\src\obj\Debug\net48\RWF.dll
+C:\Users\Admin\Documents\RAINWORLD\Rainy-World-Funkin-master\src\obj\Debug\net48\RWF.pdb

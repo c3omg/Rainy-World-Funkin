@@ -209,6 +209,9 @@ namespace RWF.FNFJSON
         /// Completely unused variable.
         /// </summary>
         public int typeOfSection;
+
+        public bool gfSection = false;
+
         /// <summary>
         /// BPM, only takes effect if changeBPM is true.
         /// </summary>
@@ -282,6 +285,7 @@ namespace RWF.FNFJSON
         /// If true, Player 1(bf) will play this note, otherwise, Player 2(dad/foe) will play this note.
         /// </summary>
         public bool GottaHit = true;
+        public bool gfNote = false;
         /// <summary>
         /// How long the note will be held/sustained for. In miliseconds.
         /// </summary>

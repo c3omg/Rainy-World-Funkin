@@ -10,11 +10,12 @@ using UnityEngine;
 
 namespace RWF
 {
-    [BepInPlugin(MOD_ID, "Rainy World Funkin'", "0.2.1")]
+    [BepInPlugin(MOD_ID, "Rainy World Funkin'", "0.4.0")]
     class Plugin : BaseUnityPlugin
     {
         public static ProcessManager.ProcessID FunkinMenu => new ProcessManager.ProcessID("FunkinMenu", register: true);
         public static ProcessManager.ProcessID FunkinRestart => new ProcessManager.ProcessID("FunkinRestart", register: true);
+        public static ProcessManager.ProcessID FunkinCharacterEditor => new ProcessManager.ProcessID("FunkinCharacterEditor", register: true);
 
         public static SoundID[] missnote_sounds;
         public static SoundID[] introSounds = new SoundID[]
@@ -115,6 +116,7 @@ namespace RWF
             RWF.FunkinMenu.OnBeatHit += FunkinMenu_OnBeatHit;
             RWF.FunkinMenu.OnUpdate += FunkinMenu_OnUpdate;
             RWF.FunkinMenu.OnCreate += FunkinMenu_OnCreate;
+            RWF.FunkinMenu.OnEnemyHit += this.FunkinMenu_OnEnemyHit;
         }
 
         private void FunkinMenu_OnCreate(FunkinMenu self)
@@ -122,6 +124,15 @@ namespace RWF
             if (self.SONG.Name.ToLower() == "ice cube")
             {
                 self.stage.camSpeed = 0.005f;
+            }
+        }
+
+        private void FunkinMenu_OnEnemyHit(FunkinMenu self, Swagshit.Note daNote)
+        {
+            bool flag = self.SONG.Name == "Ballistic (HQ)";
+            if (flag)
+            {
+                self.Add_Camera_Zoom(0.015f, 0.03f);
             }
         }
 
@@ -143,7 +154,7 @@ namespace RWF
 
             }
 
-            if (self.SONG.Name.ToLower() == "ice cube")
+            if (self.SONG.Name.ToLower() == "ice cube" && Conductor.curBeat >= 1)
             {
 
                 var up = 3.75f;
@@ -195,6 +206,20 @@ namespace RWF
                     self.camBounceSpeed = 1;
                 }
             }
+            else if (self.SONG.Name.ToLower() == "Ballistic (HQ)")
+            {
+                if (curBeat == 80)
+                {
+                    if (self.boyfriend.curAnim == "idle")
+                    {
+                        self.boyfriend.PlayAnimation("idle", true);
+                    }
+                    if (self.dad.curAnim == "idle")
+                    {
+                        self.dad.PlayAnimation("idle", true);
+                    }
+                }
+            }
 
         }
 
@@ -238,6 +263,10 @@ namespace RWF
                 else if (ID == Plugin.FunkinRestart)
                 {
                     self.currentMainLoop = new FunkinMenu(self);
+                }
+                else if (ID == Plugin.FunkinCharacterEditor)
+                {
+                    self.currentMainLoop = new FunkinCharacterEditor(self);
                 }
             });
 

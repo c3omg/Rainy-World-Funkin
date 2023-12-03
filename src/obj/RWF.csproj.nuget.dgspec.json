@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\USER\\source\\repos\\Rain World\\Rainy night funkin\\src\\RWF.csproj": {}
+    "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin-master\\src\\RWF.csproj": {}
   },
   "projects": {
-    "C:\\Users\\USER\\source\\repos\\Rain World\\Rainy night funkin\\src\\RWF.csproj": {
+    "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin-master\\src\\RWF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\USER\\source\\repos\\Rain World\\Rainy night funkin\\src\\RWF.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin-master\\src\\RWF.csproj",
         "projectName": "RWF",
-        "projectPath": "C:\\Users\\USER\\source\\repos\\Rain World\\Rainy night funkin\\src\\RWF.csproj",
-        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\USER\\source\\repos\\Rain World\\Rainy night funkin\\src\\obj\\",
+        "projectPath": "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin-master\\src\\RWF.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin-master\\src\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -39,7 +39,7 @@
       "frameworks": {
         "net48": {
           "targetAlias": "net48",
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
