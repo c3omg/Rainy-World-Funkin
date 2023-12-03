@@ -662,8 +662,8 @@ namespace RWF
                                     vel = new Vector2(UnityEngine.Random.Range(-1f, 1f), 4.5f),
                                     acc = new Vector2(0f, -0.15f)
                                 };
-                                Rating rating2 = rate;
-                                rating2.pos.x -= 75f;
+                                rate.pos.x += 425f;
+                                rate.pos.y -= 300f;
                                 this.pages[1].subObjects.Add(rate);
                             }
 
