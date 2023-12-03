@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin-master\\src\\RWF.csproj": {}
+    "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin\\src\\RWF.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin-master\\src\\RWF.csproj": {
+    "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin\\src\\RWF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin-master\\src\\RWF.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin\\src\\RWF.csproj",
         "projectName": "RWF",
-        "projectPath": "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin-master\\src\\RWF.csproj",
+        "projectPath": "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin\\src\\RWF.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin-master\\src\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\Documents\\RAINWORLD\\Rainy-World-Funkin\\src\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
