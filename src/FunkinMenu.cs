@@ -62,6 +62,7 @@ namespace RWF
         public float cameraHUDScale = 0f;
         public float cameraGameScale = 0f;
         public float spawnTime = 2000;
+        public bool skipCountdown = false;
 
         public bool alreadygoingtoadifferentsecene = false;
 
@@ -404,7 +405,10 @@ namespace RWF
         private void startCountdown()
         {
             startedCountdown = true;
-            Conductor.songPosition = -Conductor.crochet * 5;
+            if (skipCountdown)
+                Conductor.songPosition = 0;
+            else
+                Conductor.songPosition = -Conductor.crochet * 5;
         }
 
         public void goodNoteHit(Swagshit.Note daNote)
