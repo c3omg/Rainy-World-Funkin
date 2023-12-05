@@ -63,6 +63,7 @@ namespace RWF
         public float cameraGameScale = 0f;
         public float spawnTime = 2000;
         public bool skipCountdown = false;
+        public bool useDefaultExitFunction = true;
 
         public bool alreadygoingtoadifferentsecene = false;
 
@@ -930,7 +931,7 @@ namespace RWF
                 }
                 else // kinda a hacky way of ending the song, i dont want the song to end right after starting since there might be a frame where the song is still null, i also dont know if update is called still, or if it only gets called after creation
                 {
-                    if (this.manager.musicPlayer.song == null)
+                    if (this.manager.musicPlayer.song == null && useDefaultExitFunction)
                     {
                         this.manager.RequestMainProcessSwitch(ProcessManager.ProcessID.MainMenu);
                         this.framesPerSecond = 40;
