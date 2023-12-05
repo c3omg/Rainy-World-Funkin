@@ -691,10 +691,6 @@ namespace RWF
             {
                 playerStrums[Data].sprite.color = Color.Lerp(noteColor, Color.white, 0.65f);
                 playerStrums[Data].sprSize = 2.65f;
-
-                NoteSplash splash = new(this, pages[1], noteColor, playerStrums[Data].pos);
-
-                this.pages[1].subObjects.Add(splash);
                 
                 if (playAnim)
                 {
