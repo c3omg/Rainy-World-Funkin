@@ -14,14 +14,17 @@ namespace RWF.Swagshit
         public FSprite sprite;
         public UnityEngine.Vector2 pos;
         public Vector2 scrollFactor = new Vector2(1, 1);
+        public bool IsPartOfHUD = false;
 
-        public FunkinSprite(Menu.Menu menu, Menu.MenuObject owner) : base(menu, owner) // why didnt i fucking add this from the start
+        public FunkinSprite(Menu.Menu menu, Menu.MenuObject owner, bool IsPartOfHUD = false) : base(menu, owner) // why didnt i fucking add this from the start
         {
             this.sprite = new("Futile_White");
 
             this.Container.AddChild(sprite);
 
             scrollFactor = new Vector2(0.9f, 0.9f);
+
+            this.IsPartOfHUD = IsPartOfHUD;
         }
 
         public void Destroy()
@@ -37,7 +40,7 @@ namespace RWF.Swagshit
         {
             base.GrafUpdate(timeStacker);
 
-            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(pos, true, scrollFactor));
+            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(pos, IsPartOfHUD, scrollFactor));
         }
 
     }
