@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace RWF
 {
-    [BepInPlugin(MOD_ID, "Rainy World Funkin'", "0.4.2")]
+    [BepInPlugin(MOD_ID, "Rainy World Funkin'", "0.4.3")]
     class Plugin : BaseUnityPlugin
     {
         public static ProcessManager.ProcessID FunkinMenu => new ProcessManager.ProcessID("FunkinMenu", register: true);
