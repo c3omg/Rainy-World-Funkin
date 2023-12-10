@@ -195,7 +195,7 @@ namespace RWF.Swagshit
 
             if (!animations.ContainsKey(name)) return;
             if (!Futile.atlasManager.DoesContainElementWithName(animations[name] + "_0")) return;
-            if (!forced && curAnim == name &&!finished) return;
+            if (!forced && curAnim == name && !finished) return;
 
             this.frameCounter = 0;
             finished = false;
@@ -231,15 +231,13 @@ namespace RWF.Swagshit
                 {
 
                     if (!ANIM_LOOPABLES[curAnim])
+                    {
                         if (this.frame != FRAME_MAXS[curAnim] - 1)
                         {
                             this.frame++;
                             finished = false;
                         }
-                        else if (this.frame == FRAME_MAXS[curAnim] - 1)
-                            finished = true;
-                        else
-                            this.frame++;
+                    }
                     else
                     {
 
@@ -256,6 +254,8 @@ namespace RWF.Swagshit
                     frameCounter++;
                 else if (this.frame != FRAME_MAXS[curAnim] - 1)
                     frameCounter++;
+                else
+                    finished = true;
             }
 
         }

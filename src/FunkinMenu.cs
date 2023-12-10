@@ -539,19 +539,9 @@ namespace RWF
 
                     Character character = currentRappers[characterName];
 
-                    if (character.isPlayer)
+                    if (character.curAnim == "idle")
                     {
-                        if ((character.finished && !keysPressed.ContainsValue(true)) | character.curAnim == "idle")
-                        {
-                            character.PlayAnimation("idle");
-                        }
-                    }
-                    else
-                    {
-                        if (character.finished | character.curAnim != "idle" && (character.holdtimer > Conductor.step_crochet * (0.0011) * character.singDuration) | character.curAnim == "idle")
-                        {
-                            character.PlayAnimation("idle");
-                        }
+                        character.PlayAnimation("idle", false);
                     }
 
                 }
