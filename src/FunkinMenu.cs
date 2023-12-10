@@ -541,7 +541,7 @@ namespace RWF
 
                     if (character.isPlayer)
                     {
-                        if ((character.finished && !keysPressed.ContainsValue(true)) | character.curAnim != "idle" && (character.holdtimer > Conductor.step_crochet * (0.0011) * character.singDuration) && !keysPressed.ContainsValue(true) | character.curAnim == "idle")
+                        if ((character.finished && !keysPressed.ContainsValue(true)) | character.curAnim == "idle")
                         {
                             character.PlayAnimation("idle");
                         }
@@ -1071,6 +1071,29 @@ namespace RWF
 
 
                 }
+
+                foreach (string characterName in currentRappers.Keys.ToList())
+                {
+
+                    Character character = currentRappers[characterName];
+
+                    if (character.isPlayer)
+                    {
+                        if (character.curAnim != "idle" && (character.holdtimer > Conductor.step_crochet * (0.0011) * character.singDuration) && !keysPressed.ContainsValue(true))
+                        {
+                            character.PlayAnimation("idle");
+                        }
+                    }
+                    else
+                    {
+                        if (character.curAnim != "idle" && (character.holdtimer > Conductor.step_crochet * (0.0011) * character.singDuration))
+                        {
+                            character.PlayAnimation("idle");
+                        }
+                    }
+
+                }
+
             }
             else
             {
