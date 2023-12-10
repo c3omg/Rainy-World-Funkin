@@ -20,7 +20,7 @@
     </ItemGroup>
     
         <Delete Files="@(RemovePlugins)" />
-        <Copy SourceFiles="@(CopyPlugins)" DestinationFolder="../ /plugins/" />
+        <Copy SourceFiles="@(CopyPlugins)" DestinationFolder="../mod/plugins/" />
     </Target>
     
   </Project>
