@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using static MonoMod.InlineRT.MonoModRule;
 
 namespace RWF.Swagshit
 {
@@ -18,6 +19,7 @@ namespace RWF.Swagshit
         public string character_image = "characters/tut_scug";
         public string char_name;
         public float[] GlobalPosition = new float[] { 0, 0 };
+        public float singDuration = 4f;
         public float[] CameraOffset = new float[] { 0, 0 };
 
         public CharacterJSON()
@@ -53,6 +55,8 @@ namespace RWF.Swagshit
         public Vector2 pos = Vector2.zero;
         public Vector2 CameraOffset = Vector2.zero;
         public bool finished = true;
+        public float holdtimer = 0f;
+        public float singDuration = 4f;
 
         public string Name = "bruhmoment";
 
@@ -110,6 +114,7 @@ namespace RWF.Swagshit
                 this.sprite.scale = Data.scale;
                 this.size = Data.scale;
                 this.flipped = Data.isFacingRight;
+                this.singDuration = Data.singDuration;
                 this.iconName = Data.icon;
                 this.CameraOffset = new Vector2(Data.CameraOffset[0], Data.CameraOffset[1]);
                 this.offsetPosition = new Vector2(Data.GlobalPosition[0], Data.GlobalPosition[1]);
@@ -213,6 +218,11 @@ namespace RWF.Swagshit
         {
             base.Update();
 
+            if (Time.deltaTime > 1 / menu.framesPerSecond)
+                holdtimer += Time.deltaTime;
+            else
+                holdtimer += 1 / menu.framesPerSecond;
+
             if (animations.ContainsKey(curAnim))
             {
                 this.sprite.element = Futile.atlasManager.GetElementWithName(animations[curAnim] + "_" + frame);
@@ -230,20 +240,22 @@ namespace RWF.Swagshit
                             finished = true;
                         else
                             this.frame++;
+                    else
+                    {
+
+                        if (this.frame == FRAME_MAXS[curAnim] - 1 && ANIM_LOOPABLES[curAnim])
+                            this.frame = 0;
+                        else
+                            this.frame++;
+                    }
 
                     this.frameCounter = 0;
                 }
 
-                if (this.frame == FRAME_MAXS[curAnim] && ANIM_LOOPABLES[curAnim])
-                    this.frame = 0;
-
                 if (ANIM_LOOPABLES[curAnim])
                     frameCounter++;
-                else
-                {
-                    if (this.frame != FRAME_MAXS[curAnim])
-                        frameCounter++;
-                }
+                else if (this.frame != FRAME_MAXS[curAnim] - 1)
+                    frameCounter++;
             }
 
         }

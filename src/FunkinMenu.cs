@@ -464,6 +464,8 @@ namespace RWF
                 }
             }
 
+            boyfriend.holdtimer = 0;
+
             notes.Remove(daNote);
             daNote.Destroy();
         }
@@ -502,6 +504,8 @@ namespace RWF
                     break;
             }
 
+            boyfriend.holdtimer = 0;
+
         }
 
         public void beatHit(int curBeat)
@@ -537,14 +541,14 @@ namespace RWF
 
                     if (character.isPlayer)
                     {
-                        if ((character.finished && !keysPressed.ContainsValue(true)) | character.curAnim == "idle")
+                        if ((character.finished && !keysPressed.ContainsValue(true)) | character.curAnim != "idle" && (character.holdtimer > Conductor.step_crochet * (0.0011) * character.singDuration) | character.curAnim == "idle")
                         {
                             character.PlayAnimation("idle");
                         }
                     }
                     else
                     {
-                        if (character.finished | character.curAnim == "idle")
+                        if (character.finished | character.curAnim != "idle" && (character.holdtimer > Conductor.step_crochet * (0.0011) * character.singDuration) | character.curAnim == "idle")
                         {
                             character.PlayAnimation("idle");
                         }
@@ -718,6 +722,8 @@ namespace RWF
                             boyfriend.PlayAnimation("right" + animation_suffix, true);
                             break;
                     }
+
+                    boyfriend.holdtimer = 0;
                 }
 
             }
@@ -976,6 +982,8 @@ namespace RWF
                                     dad.PlayAnimation("right" + suffix, true);
                                     break;
                             }
+
+                            dad.holdtimer = 0;
                         }
 
                         notes.Remove(note);
@@ -1021,6 +1029,8 @@ namespace RWF
                                             boyfriend.PlayAnimation("right" + animation_suffix, true);
                                             break;
                                     }
+
+                                    boyfriend.holdtimer = 0;
                                 }
 
                                 totalNotesHit++;
