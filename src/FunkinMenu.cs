@@ -541,7 +541,7 @@ namespace RWF
 
                     if (character.isPlayer)
                     {
-                        if ((character.finished && !keysPressed.ContainsValue(true)) | character.curAnim != "idle" && (character.holdtimer > Conductor.step_crochet * (0.0011) * character.singDuration) | character.curAnim == "idle")
+                        if ((character.finished && !keysPressed.ContainsValue(true)) | character.curAnim != "idle" && (character.holdtimer > Conductor.step_crochet * (0.0011) * character.singDuration) && !keysPressed.ContainsValue(true) | character.curAnim == "idle")
                         {
                             character.PlayAnimation("idle");
                         }
