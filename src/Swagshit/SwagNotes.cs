@@ -40,7 +40,7 @@ namespace RWF.Swagshit
             sprite.color = color;
 
             this.Container.AddChild(sprite);
-            this.pos = pos;
+            this.pos = this.lastpos = pos;
         }
 
         public void Destroy()
@@ -55,7 +55,7 @@ namespace RWF.Swagshit
         public override void GrafUpdate(float timestacker)
         {
             base.GrafUpdate(timestacker);
-            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos, true));
+            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(Vector2.Lerp(lastpos, pos, timestacker), true));
             sprite.scale = sprSize * Plugin.camHUDScale;
 
             this.sprite.element = Futile.atlasManager.GetElementWithName(altmode ? "note_splash_alt_" + frame : "note_splash_" + frame);
@@ -78,10 +78,13 @@ namespace RWF.Swagshit
                 this.Destroy();
             else
                 frameCounter++;
+
+            lastpos = pos;
         }
 
         private int frame = 0;
         private int framecap = 5;
+        public Vector2 lastpos = Vector2.zero;
         private int frameCounter = 0;
 
         public FSprite sprite;
@@ -91,6 +94,7 @@ namespace RWF.Swagshit
     {
 
         public UnityEngine.Vector2 pos = UnityEngine.Vector2.zero;
+        public Vector2 lastpos = Vector2.zero;
         private Color color;
 
         public float length = 1f;
@@ -196,7 +200,7 @@ namespace RWF.Swagshit
             sprite.color = this.color;
 
             this.Container.AddChild(sprite);
-            this.pos = pos;
+            this.pos = this.lastpos = pos;
         }
 
         public void Destroy()
@@ -224,6 +228,8 @@ namespace RWF.Swagshit
                 canBeHit = false;
 
             }
+
+            lastpos = pos;
 
             /*
              
@@ -257,7 +263,7 @@ namespace RWF.Swagshit
         public override void GrafUpdate(float timestacker)
         {
             base.GrafUpdate(timestacker);
-            this.sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos, true, default(Vector2)));
+            this.sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(Vector2.Lerp(lastpos, pos, timestacker), true, default(Vector2)));
             this.sprite.scale = 2.5f * Plugin.camHUDScale;
             bool isSusNote = this.IsSusNote;
             if (isSusNote)
@@ -278,6 +284,7 @@ namespace RWF.Swagshit
     {
 
         public UnityEngine.Vector2 pos = UnityEngine.Vector2.zero;
+        public Vector2 lastpos = Vector2.zero;
         private Color color;
         public float resetAnim = 0;
         private int noteData = 0;
@@ -316,7 +323,14 @@ namespace RWF.Swagshit
             sprite.color = new Color(.75f, .75f, .75f);
 
             this.Container.AddChild(sprite);
-            this.pos = pos;
+            this.pos = this.lastpos = pos;
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            lastpos = pos;
         }
 
         public void Destroy()
@@ -330,8 +344,9 @@ namespace RWF.Swagshit
         public override void GrafUpdate(float timestacker)
         {
             base.GrafUpdate(timestacker);
-            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos, true));
-            sprite.scale = sprSize * Plugin.camHUDScale;
+            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(Vector2.Lerp(lastpos, pos, timestacker), true));
+            //this.sprite.SetPosition(Vector2.Lerp(this.sprite.GetPosition(), (this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos, true, default(Vector2)), timestacker));
+            sprite.scale = sprSize;
         }
 
         private int[] animation_frames;
@@ -351,7 +366,7 @@ namespace RWF.Swagshit
             {
                 scale = 1.5f
             };
-            this.pos = pos;
+            this.pos = this.lastpos = pos;
             this.Container.AddChild(this.sprite);
         }
 
@@ -390,17 +405,20 @@ namespace RWF.Swagshit
                 }
                 base.Update();
             }
+
+            lastpos = pos;
         }
 
         // Token: 0x06000083 RID: 131 RVA: 0x00008F62 File Offset: 0x00007162
         public override void GrafUpdate(float timestacker)
         {
             base.GrafUpdate(timestacker);
-            this.sprite.SetPosition(this.pos);
+            this.sprite.SetPosition(Vector2.Lerp(lastpos, pos, timestacker));
         }
 
         // Token: 0x040000A2 RID: 162
         public Vector2 pos = Vector2.zero;
+        public Vector2 lastpos = Vector2.zero;
 
         // Token: 0x040000A3 RID: 163
         public Vector2 vel = Vector2.zero;

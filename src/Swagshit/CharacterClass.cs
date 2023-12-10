@@ -293,11 +293,9 @@ namespace RWF.Swagshit
         {
             base.GrafUpdate(timeStacker);
 
-            this.Size = UnityEngine.Vector2.Lerp(this.Size, wantedsize, 0.3f);
-
             sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(pos, true));
-            sprite.scaleX = flipped ? -Size.x : Size.x * Plugin.camHUDScale;
-            sprite.scaleY = Size.y * Plugin.camHUDScale;
+            sprite.scaleX = flipped ? -Size.x : Size.x;
+            sprite.scaleY = Size.y;
         }
 
         public FSprite sprite;

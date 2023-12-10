@@ -29,6 +29,7 @@ namespace RWF
         public static event FunkinMenu.hook_notecreated OnNoteCreated;
         public static event FunkinMenu.hook_stephit OnStepHit;
         public static event FunkinMenu.hook_updatecameratarget UpdateCameraTarget;
+        public static event FunkinMenu.hook_songstart OnSongStart;
 
         public delegate void hook_beatHit(RWF.FunkinMenu self, int curBeat);
         public delegate void hook_update(RWF.FunkinMenu self);
@@ -40,6 +41,7 @@ namespace RWF
         public delegate void hook_notecreated(FunkinMenu self, RWF.Swagshit.Note daNote);
         public delegate void hook_stephit(FunkinMenu self, int curStep);
         public delegate void hook_updatecameratarget(RWF.FunkinMenu self);
+        public delegate void hook_songstart(RWF.FunkinMenu self);
 
         // Varibles
 
@@ -391,10 +393,7 @@ namespace RWF
 
             Conductor.songPosition = -Conductor.crochet * 5;
 
-            if (FunkinMenu.OnCreate != null)
-            {
-                FunkinMenu.OnCreate(this);
-            }
+            if (FunkinMenu.OnCreate != null) FunkinMenu.OnCreate(this);
 
             currentRappers.Add("dad", dad);
             currentRappers.Add("bf", boyfriend);
@@ -669,6 +668,7 @@ namespace RWF
                                 };
                                 rate.pos.x += 425f;
                                 rate.pos.y -= 300f;
+                                rate.lastpos = rate.pos;
                                 this.pages[1].subObjects.Add(rate);
                             }
 
@@ -801,6 +801,8 @@ namespace RWF
         {
             startingSong = false;
 
+            if (FunkinMenu.OnSongStart != null) FunkinMenu.OnSongStart(this);
+
             var song = new Music.Song(this.manager.musicPlayer, "FNF - " + SONG.Name, Music.MusicPlayer.MusicContext.Menu);
 
             Conductor.CurrentSong = song;
@@ -810,6 +812,7 @@ namespace RWF
                 this.manager.musicPlayer.song = song;
                 this.manager.musicPlayer.song.playWhenReady = true;
             }
+
         }
 
         public override void Update() // this might be the reason for the lag, but im scared it'll bite back if i even think about making it work better
@@ -1195,7 +1198,7 @@ namespace RWF
 
             if (message == "PLAYFNFSONG")
             {
-                this.PlaySound(SoundID.MENU_Player_Join_Game);
+                this.PlaySound(SoundID.MENU_Player_Join_Game, 0, 1, 3);
                 this.manager.RequestMainProcessSwitch(Plugin.FunkinMenu);
             }
             else if (message == "EXITTOMENU")
@@ -1209,7 +1212,7 @@ namespace RWF
                 {
                     if (songButtons.ContainsKey(button) && message == button.signalText)
                     {
-                        this.PlaySound(SoundID.MENU_Next_Slugcat);
+                        this.PlaySound(SoundID.MENU_Next_Slugcat, 0, 1, 1);
                         Plugin.SelectedSong = songButtons[button];
 
                         menuLabel.text = "Currently Selected Song: " + Plugin.SelectedSong;
@@ -1224,9 +1227,12 @@ namespace RWF
         public void CreateSongButton(string Song = "Unnamed Song")
         {
 
-            int amountOfButtons = buttons.Count % 9;
+            float maxCapOfButtons = 10;
+            float amountOfButtons = songButtons.Count % maxCapOfButtons;
 
-            SimpleButton button = new(this, this.pages[0], Song, Song.ToUpper(), new(75 + (47.5f * (int)Mathf.Floor(amountOfButtons / 12)), 730 - (47.5f * amountOfButtons)), new(100, 35));
+            Debug.Log("RWF DEBUG: songButtons : " + songButtons.Count);
+
+            SimpleButton button = new(this, this.pages[0], Song, Song.ToUpper(), new(75 + (125f * (int)Mathf.Floor(songButtons.Count / maxCapOfButtons)), 730 - (47.5f * amountOfButtons)), new(100, 35));
 
             this.pages[0].subObjects.Add(button);
 

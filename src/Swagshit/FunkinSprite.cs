@@ -13,6 +13,7 @@ namespace RWF.Swagshit
 
         public FSprite sprite;
         public UnityEngine.Vector2 pos;
+        public Vector2 lastpos = Vector2.zero;
         public Vector2 scrollFactor = new Vector2(1, 1);
         public bool IsPartOfHUD = false;
 
@@ -36,11 +37,18 @@ namespace RWF.Swagshit
                 (this.page as Page).subObjects.Remove(this);
         }
 
+        public override void Update()
+        {
+            base.Update();
+
+            lastpos = pos;
+        }
+
         public override void GrafUpdate(float timeStacker)
         {
             base.GrafUpdate(timeStacker);
 
-            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(pos, IsPartOfHUD, scrollFactor));
+            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(Vector2.Lerp(lastpos, pos, timeStacker), IsPartOfHUD, scrollFactor));
         }
 
     }

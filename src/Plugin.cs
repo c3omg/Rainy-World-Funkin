@@ -362,6 +362,7 @@ namespace RWF
 
         public RWF_Options() : base()
         {
+
             GhostTapping = this.config.Bind("fnfghosttapping", true);
 
             HoldNoteThickness = this.config.Bind("fnfnotethickness", 1f);
