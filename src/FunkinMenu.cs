@@ -119,6 +119,8 @@ namespace RWF
 
         public MenuLabel scoretText;
 
+        public static FunkinMenu instance = null;
+
         public bool gotblueballed = false;
 
         public List<Conductor.ratingshit> RatingData = new List<Conductor.ratingshit>
@@ -134,7 +136,13 @@ namespace RWF
 
         private RWF.Swagshit.Note CreateUsableNote(RWF.FNFJSON.Note daNote)
         {
+            Swagshit.Note oldNote;
+
             RWF.Swagshit.Note dunceNote = new RWF.Swagshit.Note(this, this.pages[1], (float)daNote.StrumTime, (int)daNote.NoteData, daNote.GottaHit, default(Vector2), daNote.isSustainNote, daNote.lastSustainNote);
+            if (unspawnNotes.Count > 0)
+                oldNote = unspawnNotes[unspawnNotes.Count - 1];
+            else
+                oldNote = dunceNote;
             dunceNote.noteType = daNote.PsychNoteType;
             bool flag = daNote.PsychNoteType != "";
             if (flag)
@@ -188,11 +196,13 @@ namespace RWF
             dunceNote.gfNote = daNote.gfNote;
             dunceNote.pos = new Vector2(-5000f, 5000f);
             this.pages[1].subObjects.Add(dunceNote);
+            dunceNote.prevNote = oldNote;
             return dunceNote;
         }
 
         private void CreateNotes()
         {
+
             foreach (Section section in this.SONG.Sections)
             {
                 bool flag3 = section == null;
@@ -237,6 +247,9 @@ namespace RWF
                     }
                 }
             }
+
+
+
             this.unspawnNotes = (from x in this.unspawnNotes
                                  orderby x.strumTime
                                  select x).ToList<RWF.Swagshit.Note>();
@@ -246,6 +259,8 @@ namespace RWF
         {
 
             this.framesPerSecond = 60;
+
+            instance = this;
 
             curBeat = 0;
             curStep = 0;
@@ -413,8 +428,12 @@ namespace RWF
 
         public void goodNoteHit(Swagshit.Note daNote)
         {
-            if (OnPlayerHit != null) OnPlayerHit(this, daNote);
+            if (daNote.wasGoodHit) return;
 
+            daNote.wasGoodHit = true;
+
+            if (OnPlayerHit != null) OnPlayerHit(this, daNote);
+                        
             health += 0.023f * daNote.healthGain;
 
             combo++;
@@ -423,8 +442,11 @@ namespace RWF
 
             UpdateScoreText();
 
-            notes.Remove(daNote);
-            daNote.Destroy();
+            if (!daNote.IsSusNote)
+            {
+                notes.Remove(daNote);
+                daNote.Destroy();
+            }
         }
 
         public void noteMiss(Swagshit.Note daNote)
@@ -770,6 +792,122 @@ namespace RWF
 
         }
 
+        //Hold Notes
+        public void checkKeys()
+        {
+
+            List<bool> holdArray = new()
+            {
+                Input.GetKey(RWF_Options.key_note[0].Value),
+                Input.GetKey(RWF_Options.key_note[1].Value),
+                Input.GetKey(RWF_Options.key_note[2].Value),
+                Input.GetKey(RWF_Options.key_note[3].Value),
+            };
+
+
+            if (notes.Count > 0)
+            {
+                foreach (Swagshit.Note daNote in notes.ToList())
+                {
+                    if (daNote.IsSusNote && holdArray[daNote.noteData] && daNote.canBeHit
+                        && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit)
+                    {
+                        playerStrums[daNote.noteData].sprite.color = Color.Lerp(daNote.sprite.color, Color.white, 0.65f);
+                        playerStrums[daNote.noteData].sprSize = 2.65f;
+
+                        if (!daNote.no_animation)
+                        {
+
+                            var animation_suffix = "";
+
+                            if (SONG.Sections[curSection] != null)
+                            {
+                                if (SONG.Sections[curSection].altAnim && !SONG.Sections[curSection].gfSection)
+                                {
+                                    animation_suffix = "-alt";
+                                }
+                            }
+
+                            switch (daNote.noteData)
+                            {
+                                case 0:
+                                    boyfriend.PlayAnimation("left" + animation_suffix, true);
+                                    break;
+                                case 1:
+                                    boyfriend.PlayAnimation("down" + animation_suffix, true);
+                                    break;
+                                case 2:
+                                    boyfriend.PlayAnimation("up" + animation_suffix, true);
+                                    break;
+                                case 3:
+                                    boyfriend.PlayAnimation("right" + animation_suffix, true);
+                                    break;
+                            }
+
+                            boyfriend.holdtimer = 0;
+                        }
+
+                        goodNoteHit(daNote);
+
+                    }
+                }
+            }
+
+            /*
+             * if (note.strumTime <= Conductor.songPosition && note.mustPress && note.IsSusNote && !note.CPUignoreNote)
+                    {                        
+
+                        if (note.IsSusNote) note.clipToStrumNote(playerStrums[note.noteData]);
+
+                        foreach (KeyCode kvp in keysPressed.Keys.ToList<KeyCode>())
+                        {
+                            if (Input.GetKey(kvp) && note.noteData == keyData[kvp])
+                            {
+                                playerStrums[note.noteData].sprite.color = Color.Lerp(note.sprite.color, Color.white, 0.65f);
+                                playerStrums[note.noteData].sprSize = 2.65f;
+
+                                if (!note.no_animation)
+                                {
+
+                                    var animation_suffix = "";
+
+                                    if (SONG.Sections[curSection] != null)
+                                    {
+                                        if (SONG.Sections[curSection].altAnim && !SONG.Sections[curSection].gfSection)
+                                        {
+                                            animation_suffix = "-alt";
+                                        }
+                                    }
+
+                                    switch (note.noteData)
+                                    {
+                                        case 0:
+                                            boyfriend.PlayAnimation("left" + animation_suffix, true);
+                                            break;
+                                        case 1:
+                                            boyfriend.PlayAnimation("down" + animation_suffix, true);
+                                            break;
+                                        case 2:
+                                            boyfriend.PlayAnimation("up" + animation_suffix, true);
+                                            break;
+                                        case 3:
+                                            boyfriend.PlayAnimation("right" + animation_suffix, true);
+                                            break;
+                                    }
+
+                                    boyfriend.holdtimer = 0;
+                                }
+
+                                totalNotesHit++;
+
+                                goodNoteHit(note);
+                                continue;
+                            }
+                        }
+
+                    }*/
+        }
+
         public UnityEngine.Vector2 GetPositionBasedOffCamScale(UnityEngine.Vector2 vector2, bool UsesHUDScaling = false, UnityEngine.Vector2 scrollFactor = default) // i wasnt tired when writing this, i just dont know how to fucking code alrighted
         {
 
@@ -933,6 +1071,8 @@ namespace RWF
                     }
                 }
 
+                checkKeys();
+
                 foreach (Swagshit.Note note in notes.ToList())
                 {
 
@@ -981,63 +1121,18 @@ namespace RWF
                         continue;
                     }
 
-                    if (note.strumTime - CurrentTime <= -0 && note.mustPress && note.IsSusNote && !note.CPUignoreNote)
+                    if (Conductor.songPosition - note.strumTime > Mathf.Max(Conductor.step_crochet, 350 / SONG.speed))
                     {
+                        if (note.mustPress && !note.ignoreNote && (note.tooLate || !note.wasGoodHit))
+                            noteMiss(note);
 
-                        foreach (KeyCode kvp in keysPressed.Keys.ToList<KeyCode>())
-                        {
-                            if (Input.GetKey(kvp) && note.noteData == keyData[kvp])
-                            {
-                                playerStrums[note.noteData].sprite.color = Color.Lerp(note.sprite.color, Color.white, 0.65f);
-                                playerStrums[note.noteData].sprSize = 2.65f;
+                        note.inactive = true;
+                        note.sprite.isVisible = false;
 
-                                if (!note.no_animation)
-                                {
+                        notes.Remove(note);
+                        note.Destroy();
 
-                                    var animation_suffix = "";
-
-                                    if (SONG.Sections[curSection] != null)
-                                    {
-                                        if (SONG.Sections[curSection].altAnim && !SONG.Sections[curSection].gfSection)
-                                        {
-                                            animation_suffix = "-alt";
-                                        }
-                                    }
-
-                                    switch (note.noteData)
-                                    {
-                                        case 0:
-                                            boyfriend.PlayAnimation("left" + animation_suffix, true);
-                                            break;
-                                        case 1:
-                                            boyfriend.PlayAnimation("down" + animation_suffix, true);
-                                            break;
-                                        case 2:
-                                            boyfriend.PlayAnimation("up" + animation_suffix, true);
-                                            break;
-                                        case 3:
-                                            boyfriend.PlayAnimation("right" + animation_suffix, true);
-                                            break;
-                                    }
-
-                                    boyfriend.holdtimer = 0;
-                                }
-
-                                totalNotesHit++;
-
-                                goodNoteHit(note);
-                                continue;
-                            }
-                        }
-
-                    }
-
-                    if (350 + note.strumTime < CurrentTime && note.mustPress && !note.ignoreNote)
-                    {
-
-                        noteMiss(note);
                         continue;
-
                     }
 
                     float setYpos = playerStrums[note.noteData].pos.y;

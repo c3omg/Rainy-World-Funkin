@@ -152,6 +152,9 @@ namespace RWF.Swagshit
 
             leData %= 4;
 
+            if (prevNote == null)
+                prevNote = this;
+
             this.strumTime = strumTime;
             this.noteData = leData;
             this.mustPress = isPlayer;
@@ -217,15 +220,24 @@ namespace RWF.Swagshit
 
             if (mustPress)
             {
-                if (strumTime > MusicCurrentTime - (350 * lateHitMult)
-                    && strumTime < MusicCurrentTime + (350 * earlyHitMult))
+                if (strumTime > Conductor.songPosition - (350 * lateHitMult)
+                    && strumTime < Conductor.songPosition + (350 * earlyHitMult))
                     canBeHit = true;
                 else
                     canBeHit = false;
+
+                if (strumTime < Conductor.songPosition - 350 && !wasGoodHit)
+                    tooLate = true;
             }
             else
             {
                 canBeHit = false;
+
+                if (strumTime < Conductor.songPosition + (350 * earlyHitMult))
+                {
+                    if ((IsSusNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition)
+                        wasGoodHit = true;
+                }
 
             }
 
@@ -269,7 +281,63 @@ namespace RWF.Swagshit
             if (isSusNote)
             {
                 this.sprite.scaleX = 2.5f * RWF_Options.HoldNoteThickness.Value;
-                this.sprite.scaleY = this.length * Plugin.camHUDScale;
+            }
+
+            if (this.IsSusNote)
+            {
+                if (mustPress)
+                    clipToStrumNote(FunkinMenu.instance.playerStrums[noteData]);
+                else
+                    clipToStrumNote(FunkinMenu.instance.opponentStrums[noteData]);
+            }
+        }
+
+        /*
+         public function clipToStrumNote(myStrum:StrumNote)
+	{
+		var center:Float = myStrum.y + offsetY + Note.swagWidth / 2;
+		if(isSustainNote && (mustPress || !ignoreNote) &&
+			(!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !canBeHit))))
+		{
+			var swagRect:FlxRect = clipRect;
+			if(swagRect == null) swagRect = new FlxRect(0, 0, frameWidth, frameHeight);
+
+			if (myStrum.downScroll)
+			{
+				if(y - offset.y * scale.y + height >= center)
+				{
+					swagRect.width = frameWidth;
+					swagRect.height = (center - y) / scale.y;
+					swagRect.y = frameHeight - swagRect.height;
+				}
+			}
+			else if (y + offset.y * scale.y <= center)
+			{
+				swagRect.y = (center - y) / scale.y;
+				swagRect.width = width / scale.x;
+				swagRect.height = (height / scale.y) - swagRect.y;
+			}
+			clipRect = swagRect;
+		}
+	}
+         */
+
+        public void clipToStrumNote(StrumNote myStrum)
+        {
+            float center = myStrum.pos.y;
+            if (IsSusNote && (mustPress || !ignoreNote) &&
+                (!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !canBeHit))))
+            {
+
+                var bruhMoment = center - pos.y;
+
+                if (Mathf.Abs(bruhMoment) <= sprite.element.sourceSize.y * length && bruhMoment > 0)
+                    sprite.scaleY = length * (Mathf.Abs(bruhMoment) / (sprite.element.sourceSize.y));
+                else if (bruhMoment <= 0)
+                    sprite.scaleY = 0;
+                else
+                    sprite.scaleY = length;
+
             }
         }
 
