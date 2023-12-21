@@ -101,8 +101,18 @@ namespace RWF
 
         public FLX_BAR bar;
 
-        public UnityEngine.Vector2 cameraPosiion = new(0, 0);
-        public UnityEngine.Vector2 cameraTarget = new(0, 0);
+        public Vector2 cameraPosiion
+        {
+            get
+            {
+                return this.pages[0].Container.GetPosition();
+            }
+            set
+            {
+                this.pages[0].Container.SetPosition(value);
+            }
+        }
+        public Vector2 cameraTarget = new(0, 0);
 
         private int lastBeat = 0;
         private int lastStep = 0;
@@ -408,7 +418,7 @@ namespace RWF
 
             Conductor.songPosition = -Conductor.crochet * 5;
 
-            if (FunkinMenu.OnCreate != null) FunkinMenu.OnCreate(this);
+            if (OnCreate != null) OnCreate?.Invoke(this);
 
             currentRappers.Add("dad", dad);
             currentRappers.Add("bf", boyfriend);
@@ -1083,8 +1093,6 @@ namespace RWF
                         continue;
                     }
 
-
-
                     if (note.strumTime - CurrentTime <= -0 && !note.mustPress && !note.CPUignoreNote)
                     {
                         if (OnEnemyHit != null) OnEnemyHit(this, note);
@@ -1152,8 +1160,6 @@ namespace RWF
                     vector2.y = (setYpos + 0.45f * (CurrentTime - note.strumTime) * SONG.speed * 1f);
 
                     note.pos = vector2;
-
-
 
                 }
 

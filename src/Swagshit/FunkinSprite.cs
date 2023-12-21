@@ -23,8 +23,6 @@ namespace RWF.Swagshit
 
             this.Container.AddChild(sprite);
 
-            scrollFactor = new Vector2(0.9f, 0.9f);
-
             this.IsPartOfHUD = IsPartOfHUD;
         }
 
@@ -48,7 +46,9 @@ namespace RWF.Swagshit
         {
             base.GrafUpdate(timeStacker);
 
-            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(Vector2.Lerp(lastpos, pos, timeStacker), IsPartOfHUD, scrollFactor));
+            var cameraoffsetVector = new Vector2(this.Container.x * (1 - scrollFactor.x), this.Container.y * (1 - scrollFactor.y));
+
+            sprite.SetPosition(Vector2.Lerp(lastpos, pos, timeStacker) - cameraoffsetVector);
         }
 
     }

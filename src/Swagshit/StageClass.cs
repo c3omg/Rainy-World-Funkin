@@ -63,33 +63,29 @@ namespace RWF.Swagshit
 
         public void LoadFromJSON(string rawData)
         {
-            bool flag = this.sprites != null && this.sprites.Count > 0;
+            bool flag = this.funkinObjects != null && this.funkinObjects.Count > 0;
             if (flag)
             {
-                foreach (FSprite fp in this.sprites)
+                foreach (FunkinSprite fp in funkinObjects)
                 {
-                    this.Container.RemoveChild(fp);
+                    this.Container.RemoveChild(fp.sprite);
+                    this.page.subObjects.Remove(fp);
                 }
             }
-            this.sprites.Clear();
-            this.spriteScrollFactor.Clear();
-            this.spritePostions.Clear();
+            this.funkinObjects.Clear();
             try
             {
                 StageJSON Data = JsonConvert.DeserializeObject<StageJSON>(rawData);
                 foreach (StageJSON.StagePieces v in Data.pieces)
                 {
-                    Vector2 vector = v.pos;
-                    FSprite sprite = new FSprite(v.spr_name, true);
-                    sprite.SetAnchor(0f, 0f);
-                    sprite.SetPosition(vector);
-                    sprite.scaleX = v.scale.x;
-                    sprite.scaleY = v.scale.y;
-                    this.sprites.Add(sprite);
-                    this.spritePostions.Add(sprite, vector);
-                    this.spriteScrollFactor.Add(sprite, v.scroll);
-                    this.spriteSize.Add(sprite, v.scale);
-                    this.Container.AddChild(sprite);
+                    FunkinSprite fObject = new(this.menu, this.page);
+                    fObject.sprite = new(v.spr_name);
+                    fObject.sprite.SetAnchor(0, 0);
+                    fObject.pos = v.pos;
+                    fObject.sprite.scaleX = v.scale.x;
+                    fObject.sprite.scaleY = v.scale.y;
+                    this.funkinObjects.Add(fObject);
+                    fObject.Container.AddChild(fObject.sprite);
                 }
                 this.camZoom = Data.zoom;
                 this.bfscroll = new Vector2(Data.bf_scroll[0], Data.bf_scroll[1]);
@@ -112,26 +108,14 @@ namespace RWF.Swagshit
             }
         }
 
-        public override void GrafUpdate(float timeStacker)
-        {
-            base.GrafUpdate(timeStacker);
-
-            foreach (FSprite fp in sprites)
-            {
-                fp.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.spritePostions[fp], false, this.spriteScrollFactor[fp]));
-                fp.scaleX = spriteSize[fp].x * Plugin.camGameScale;
-                fp.scaleY = spriteSize[fp].y * Plugin.camGameScale;
-            }
-
-        }
-
         public void Destroy()
         {
-            if (this.sprites != null)
+            if (this.funkinObjects != null)
             {
-                foreach (FSprite fp in sprites)
+                foreach (FunkinSprite fp in funkinObjects)
                 {
-                    this.Container.RemoveChild(fp);
+                    this.Container.RemoveChild(fp.sprite);
+                    this.page.subObjects.Remove(fp);
                 }
             }
 
@@ -139,10 +123,8 @@ namespace RWF.Swagshit
                 this.page?.subObjects.Remove(this);
         }
 
-        public List<FSprite> sprites = new List<FSprite>() { };
-        public Dictionary<FSprite, UnityEngine.Vector2> spritePostions = new Dictionary<FSprite, UnityEngine.Vector2>() { };
-        public Dictionary<FSprite, UnityEngine.Vector2> spriteScrollFactor = new Dictionary<FSprite, UnityEngine.Vector2>() { };
-        public Dictionary<FSprite, UnityEngine.Vector2> spriteSize = new Dictionary<FSprite, UnityEngine.Vector2>() { };
+        public List<Swagshit.FunkinSprite> funkinObjects = new List<Swagshit.FunkinSprite>() { };
+        public List<Swagshit.FunkinSprite> sprites = new List<Swagshit.FunkinSprite>() { };
         public float camZoom = 0.9f;
 
     }

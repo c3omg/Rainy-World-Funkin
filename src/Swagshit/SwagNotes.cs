@@ -1,4 +1,5 @@
 ﻿using Menu;
+using RWF.FNFJSON;
 using UnityEngine;
 
 namespace RWF.Swagshit
@@ -169,7 +170,7 @@ namespace RWF.Swagshit
                     sprite = new("HoldEnd", true);
                 else
                     sprite = new("HoldNote", true);
-                sprite.SetAnchor(0.5f, 0.5f);
+                sprite.SetAnchor(0.5f, 0.2f);
             }
             else
             {
@@ -283,7 +284,7 @@ namespace RWF.Swagshit
                 this.sprite.scaleX = 2.5f * RWF_Options.HoldNoteThickness.Value;
             }
 
-            if (this.IsSusNote)
+            if (IsSusNote)
             {
                 if (mustPress)
                     clipToStrumNote(FunkinMenu.instance.playerStrums[noteData]);
@@ -332,12 +333,16 @@ namespace RWF.Swagshit
                 var bruhMoment = center - pos.y;
 
                 if (Mathf.Abs(bruhMoment) <= sprite.element.sourceSize.y * length && bruhMoment > 0)
-                    sprite.scaleY = length * (Mathf.Abs(bruhMoment) / (sprite.element.sourceSize.y));
+                    sprite.height = Mathf.Abs(bruhMoment);
                 else if (bruhMoment <= 0)
                     sprite.scaleY = 0;
                 else
                     sprite.scaleY = length;
 
+            }
+            else if (IsSusNote)
+            {
+                sprite.scaleY = length;
             }
         }
 

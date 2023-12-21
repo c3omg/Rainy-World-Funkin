@@ -36,7 +36,7 @@ namespace RWF.Swagshit
 
     }
 
-    public class Character : Menu.MenuObject
+    public class Character : Swagshit.FunkinSprite
     {
         public Dictionary<string, string> animations = new Dictionary<string, string> { };
         private Dictionary<string, int> FRAME_MAXS = new Dictionary<string, int> { };
@@ -52,7 +52,6 @@ namespace RWF.Swagshit
         private int frameCounter = 0;
         public CharacterJSON json;
         private int failedattempts = 0;
-        public Vector2 pos = Vector2.zero;
         public Vector2 CameraOffset = Vector2.zero;
         public bool finished = true;
         public float holdtimer = 0f;
@@ -164,15 +163,6 @@ namespace RWF.Swagshit
             this.LoadCharacterDataFromRawData(charData);
         }
 
-        public void Destroy()
-        {
-            if (this.sprite != null)
-                this.Container.RemoveChild(this.sprite);
-
-            if (this.owner != null)
-                (this.page as Page).subObjects.Remove(this);
-        }
-
         public void AddAnimation(string name, string elementName, int frames = 1, int fps = 40, bool loops = false)
         {
             if (!animations.ContainsKey(name))
@@ -208,10 +198,9 @@ namespace RWF.Swagshit
         {
             base.GrafUpdate(timeStacker);
 
-            if (menu is FunkinMenu)
-                this.sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(this.pos + this.spriteOffset, false, isPlayer ? (this.menu as FunkinMenu).stage.bfscroll : (this.menu as FunkinMenu).stage.dadscroll));
-            else
-                this.sprite.SetPosition(this.pos + this.spriteOffset);
+            var cameraoffsetVector = new Vector2(this.Container.x * (1- scrollFactor.x), this.Container.y * (1 - scrollFactor.y));
+
+            this.sprite.SetPosition(this.pos + this.spriteOffset - cameraoffsetVector);
         }
 
         public override void Update()
@@ -259,8 +248,6 @@ namespace RWF.Swagshit
             }
 
         }
-
-        public FSprite sprite;
 
     }
 
