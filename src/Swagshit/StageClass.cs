@@ -35,7 +35,7 @@ namespace RWF.Swagshit
             public Vector2 scale = Vector2.zero;
 
             // Token: 0x04000111 RID: 273
-            public Vector2 scroll = Vector2.zero;
+            public Vector2 scroll = Vector2.one;
         }
     }
 
@@ -79,12 +79,14 @@ namespace RWF.Swagshit
                 foreach (StageJSON.StagePieces v in Data.pieces)
                 {
                     FunkinSprite fObject = new(this.menu, this.page);
-                    fObject.sprite = new(v.spr_name);
+                    fObject.sprite.element = Futile.atlasManager.GetElementWithName(v.spr_name);
                     fObject.sprite.SetAnchor(0, 0);
                     fObject.pos = v.pos;
                     fObject.sprite.scaleX = v.scale.x;
                     fObject.sprite.scaleY = v.scale.y;
-                    this.funkinObjects.Add(fObject);
+                    fObject.scrollFactor = v.scroll;
+                    funkinObjects.Add(fObject);
+                    this.page.subObjects.Add(fObject);
                     fObject.Container.AddChild(fObject.sprite);
                 }
                 this.camZoom = Data.zoom;
@@ -124,7 +126,10 @@ namespace RWF.Swagshit
         }
 
         public List<Swagshit.FunkinSprite> funkinObjects = new List<Swagshit.FunkinSprite>() { };
-        public List<Swagshit.FunkinSprite> sprites = new List<Swagshit.FunkinSprite>() { };
+        public List<FSprite> sprites = new List<FSprite>() { };
+        public Dictionary<FSprite, UnityEngine.Vector2> spritePostions = new Dictionary<FSprite, UnityEngine.Vector2>() { };
+        public Dictionary<FSprite, UnityEngine.Vector2> spriteScrollFactor = new Dictionary<FSprite, UnityEngine.Vector2>() { };
+        public Dictionary<FSprite, UnityEngine.Vector2> spriteSize = new Dictionary<FSprite, UnityEngine.Vector2>() { };
         public float camZoom = 0.9f;
 
     }

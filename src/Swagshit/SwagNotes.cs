@@ -287,9 +287,9 @@ namespace RWF.Swagshit
             if (IsSusNote)
             {
                 if (mustPress)
-                    clipToStrumNote(FunkinMenu.instance.playerStrums[noteData]);
+                    clipToStrumNote(FunkinMenu.instance.playerStrums[noteData], timestacker);
                 else
-                    clipToStrumNote(FunkinMenu.instance.opponentStrums[noteData]);
+                    clipToStrumNote(FunkinMenu.instance.opponentStrums[noteData], timestacker);
             }
         }
 
@@ -323,14 +323,14 @@ namespace RWF.Swagshit
 	}
          */
 
-        public void clipToStrumNote(StrumNote myStrum)
+        public void clipToStrumNote(StrumNote myStrum, float timestacker = 0f)
         {
             float center = myStrum.pos.y;
             if (IsSusNote && (mustPress || !ignoreNote) &&
                 (!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !canBeHit))))
             {
 
-                var bruhMoment = center - pos.y;
+                var bruhMoment = center - Vector2.Lerp(lastpos, pos, timestacker).y;
 
                 if (Mathf.Abs(bruhMoment) <= sprite.element.sourceSize.y * length && bruhMoment > 0)
                     sprite.height = Mathf.Abs(bruhMoment);

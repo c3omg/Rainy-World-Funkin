@@ -101,17 +101,7 @@ namespace RWF
 
         public FLX_BAR bar;
 
-        public Vector2 cameraPosiion
-        {
-            get
-            {
-                return this.pages[0].Container.GetPosition();
-            }
-            set
-            {
-                this.pages[0].Container.SetPosition(value);
-            }
-        }
+        public Vector2 cameraPosiion = new(0, 0);
         public Vector2 cameraTarget = new(0, 0);
 
         private int lastBeat = 0;
@@ -133,18 +123,18 @@ namespace RWF
 
         public bool gotblueballed = false;
 
-        public List<Conductor.ratingshit> RatingData = new List<Conductor.ratingshit>
-            {
-                new Conductor.ratingshit("perfect", 1f),
-                new Conductor.ratingshit("sick", 45f),
-                new Conductor.ratingshit("good", 90f, 0.67f),
-                new Conductor.ratingshit("bad", 150f, 0.34f),
-                new Conductor.ratingshit("shit", 230f, 0f)
+        public List<Conductor.ratingshit> RatingData = new()
+        {
+                new Conductor.ratingshit("perfect", 5f),
+                new Conductor.ratingshit("sick", 55f),
+                new Conductor.ratingshit("good", 100f, 0.67f),
+                new Conductor.ratingshit("bad", 160f, 0.34f),
+                new Conductor.ratingshit("shit", 240f, 0f)
             };
 
         // Functions
 
-        private RWF.Swagshit.Note CreateUsableNote(RWF.FNFJSON.Note daNote)
+        private Swagshit.Note CreateUsableNote(FNFJSON.Note daNote)
         {
             Swagshit.Note oldNote;
 
@@ -402,7 +392,7 @@ namespace RWF
 
             hpIconP2.flipped = true;
 
-            bar.pos = UnityEngine.Vector2.Lerp(new UnityEngine.Vector2(500, 100), new UnityEngine.Vector2(850, 115), 0.5f);
+            bar.pos = bar.lastpos = Vector2.Lerp(new Vector2(500, 100), new Vector2(850, 115), 0.5f);
 
             this.pages[1].subObjects.Add(bar);
             this.pages[1].subObjects.Add(hpIconP1);
@@ -452,11 +442,63 @@ namespace RWF
 
             UpdateScoreText();
 
+            if (!daNote.no_animation)
+            {
+
+                var animation_suffix = "";
+
+                if (SONG.Sections[curSection] != null)
+                {
+                    if (SONG.Sections[curSection].altAnim && !SONG.Sections[curSection].gfSection)
+                    {
+                        animation_suffix = "-alt";
+                    }
+                }
+
+                switch (daNote.noteData)
+                {
+                    case 0:
+                        boyfriend.PlayAnimation("left" + animation_suffix, true);
+                        break;
+                    case 1:
+                        boyfriend.PlayAnimation("down" + animation_suffix, true);
+                        break;
+                    case 2:
+                        boyfriend.PlayAnimation("up" + animation_suffix, true);
+                        break;
+                    case 3:
+                        boyfriend.PlayAnimation("right" + animation_suffix, true);
+                        break;
+                }
+
+                boyfriend.holdtimer = 0;
+            }
+
             if (!daNote.IsSusNote)
             {
+                ratingshit rating = judgeNote(daNote, RatingData, Mathf.Abs(daNote.strumTime - Conductor.songPosition));
+
+                totalNotesHit += rating.ratingMod;
+
+                if (rating.name == "sick" | rating.name == "perfect")
+                {
+                    NoteSplash splash = new(this, this.pages[1], daNote.NoteColours[daNote.noteData], this.playerStrums[daNote.noteData].pos);
+                    this.pages[1].subObjects.Add(splash);
+                }
+                Rating rate = new(this, this.pages[1], rating.name, this.manager.rainWorld.screenSize / 2f)
+                {
+                    vel = new Vector2(UnityEngine.Random.Range(-1f, 1f), 4.5f),
+                    acc = new Vector2(0f, -0.15f)
+                };
+                rate.pos.x += 425f;
+                rate.pos.y -= 300f;
+                rate.lastpos = rate.pos;
+                this.pages[1].subObjects.Add(rate);
+
                 notes.Remove(daNote);
                 daNote.Destroy();
             }
+            else totalNotesHit += 1;
         }
 
         public void noteMiss(Swagshit.Note daNote)
@@ -676,29 +718,6 @@ namespace RWF
                             noteMiss(epicNote);
                         else
                         {
-                            if (!epicNote.IsSusNote)
-                            {
-                                Conductor.ratingshit rating = Conductor.judgeNote(epicNote, RatingData, Mathf.Abs(epicNote.strumTime - Conductor.songPosition));
-
-                                totalNotesHit += rating.ratingMod;
-
-                                if (rating.name == "sick" | rating.name == "perfect")
-                                {
-                                    NoteSplash splash = new NoteSplash(this, this.pages[1], noteColor, this.playerStrums[Data].pos);
-                                    this.pages[1].subObjects.Add(splash);
-                                }
-                                Rating rate = new Rating(this, this.pages[1], rating.name, this.manager.rainWorld.screenSize / 2f)
-                                {
-                                    vel = new Vector2(UnityEngine.Random.Range(-1f, 1f), 4.5f),
-                                    acc = new Vector2(0f, -0.15f)
-                                };
-                                rate.pos.x += 425f;
-                                rate.pos.y -= 300f;
-                                rate.lastpos = rate.pos;
-                                this.pages[1].subObjects.Add(rate);
-                            }
-
-
                             animation_suffix = epicNote.animation_suffix.ToString();
                             goodNoteHit(epicNote);
                         }
@@ -717,37 +736,6 @@ namespace RWF
             {
                 playerStrums[Data].sprite.color = Color.Lerp(noteColor, Color.white, 0.65f);
                 playerStrums[Data].sprSize = 2.65f;
-                
-                if (playAnim)
-                {
-
-                    if (SONG.Sections[curSection] != null)
-                    {
-                        if (SONG.Sections[curSection].altAnim && !SONG.Sections[curSection].gfSection)
-                        {
-                            animation_suffix = "-alt";
-                        }
-                    }
-
-                    switch (Data)
-                    {
-                        case 0:
-                            boyfriend.PlayAnimation("left" + animation_suffix, true);
-                            break;
-                        case 1:
-                            boyfriend.PlayAnimation("down" + animation_suffix, true);
-                            break;
-                        case 2:
-                            boyfriend.PlayAnimation("up" + animation_suffix, true);
-                            break;
-                        case 3:
-                            boyfriend.PlayAnimation("right" + animation_suffix, true);
-                            break;
-                    }
-
-                    boyfriend.holdtimer = 0;
-                }
-
             }
             else
             {
@@ -918,7 +906,7 @@ namespace RWF
                     }*/
         }
 
-        public UnityEngine.Vector2 GetPositionBasedOffCamScale(UnityEngine.Vector2 vector2, bool UsesHUDScaling = false, UnityEngine.Vector2 scrollFactor = default) // i wasnt tired when writing this, i just dont know how to fucking code alrighted
+        public Vector2 GetPositionBasedOffCamScale(Vector2 vector2, bool UsesHUDScaling = false, Vector2 scrollFactor = default) // i wasnt tired when writing this, i just dont know how to fucking code alrighted
         {
 
             float scale = Plugin.camGameScale;
@@ -926,11 +914,11 @@ namespace RWF
             if (UsesHUDScaling)
                 scale = Plugin.camHUDScale;
 
-            UnityEngine.Vector2 vector = this.manager.rainWorld.screenSize;
+            Vector2 vector = this.manager.rainWorld.screenSize;
 
             vector /= 2;
 
-            UnityEngine.Vector2 trueVecoter = vector2;
+            Vector2 trueVecoter = vector2;
 
             if (!UsesHUDScaling)
             {
@@ -1032,10 +1020,10 @@ namespace RWF
                 scoretText.label.scale = 1.5f * Plugin.camHUDScale;
 
                 var hpIconOffsets = 16;
-                var hpIconPosiiton = UnityEngine.Vector2.Lerp(new(bar.pos.x + (bar.sprite.width / 2), 125), new(bar.pos.x - (bar.sprite.width / 2), 125), health / 2);
+                var hpIconPosiiton = Vector2.Lerp(new(bar.pos.x + (bar.sprite.width / 2), bar.pos.y), new(bar.pos.x - (bar.sprite.width / 2), bar.pos.y), health / 2);
 
-                hpIconP1.pos = hpIconPosiiton - new UnityEngine.Vector2(hpIconOffsets, 0);
-                hpIconP2.pos = hpIconPosiiton + new UnityEngine.Vector2(hpIconOffsets, 0);
+                hpIconP1.pos = hpIconPosiiton - new Vector2(hpIconOffsets, 0);
+                hpIconP2.pos = hpIconPosiiton + new Vector2(hpIconOffsets, 0);
 
                 if (curBeat != lastBeat)
                 {

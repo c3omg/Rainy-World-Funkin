@@ -36,7 +36,7 @@ namespace RWF.Swagshit
 
     }
 
-    public class Character : Swagshit.FunkinSprite
+    public class Character : FunkinSprite
     {
         public Dictionary<string, string> animations = new Dictionary<string, string> { };
         private Dictionary<string, int> FRAME_MAXS = new Dictionary<string, int> { };
@@ -65,7 +65,6 @@ namespace RWF.Swagshit
 
         public bool flipped = false;
         public float size = 1.0f;
-        public Vector2 spriteOffset = Vector2.zero;
 
         public UnityEngine.Vector2 offsetPosition = Vector2.zero;
 
@@ -142,9 +141,6 @@ namespace RWF.Swagshit
 
         public Character(Menu.Menu menu, Menu.MenuObject owner) : base(menu, owner) // why would you ever want to create a character manually????
         {
-            this.sprite = new("Futile_White");
-
-            this.Container.AddChild(sprite);
         }
 
 
@@ -156,10 +152,6 @@ namespace RWF.Swagshit
         /// <param name="charData"></param>
         public Character(Menu.Menu menu, Menu.MenuObject owner, string charData) : base(menu, owner)
         {
-            this.sprite = new("Futile_White");
-
-            this.Container.AddChild(sprite);
-
             this.LoadCharacterDataFromRawData(charData);
         }
 
@@ -192,15 +184,6 @@ namespace RWF.Swagshit
             this.frame = 0;
             this.framerate = ANIM_FRATE[name];
             this.curAnim = name;
-        }
-
-        public override void GrafUpdate(float timeStacker)
-        {
-            base.GrafUpdate(timeStacker);
-
-            var cameraoffsetVector = new Vector2(this.Container.x * (1- scrollFactor.x), this.Container.y * (1 - scrollFactor.y));
-
-            this.sprite.SetPosition(this.pos + this.spriteOffset - cameraoffsetVector);
         }
 
         public override void Update()
@@ -251,12 +234,11 @@ namespace RWF.Swagshit
 
     }
 
-    public class HealthIcon : MenuObject
+    public class HealthIcon : FunkinSprite
     {
 
-        public UnityEngine.Vector2 pos;
-        private static UnityEngine.Vector2 wantedsize = new(1.25f, 1.25f);
-        public UnityEngine.Vector2 Size = wantedsize;
+        private static Vector2 wantedsize = new(1.25f, 1.25f);
+        public Vector2 Size = wantedsize;
         public bool flipped = false;
 
         public HealthIcon(Menu.Menu menu, MenuObject owner, string elementName) : base(menu, owner)
@@ -272,57 +254,39 @@ namespace RWF.Swagshit
                 Futile.atlasManager.LoadImage("funkin/images/icons/icon-" + elementName);
             }
 
-            sprite = new FSprite("funkin/images/icons/icon-" + elementName);
+            sprite.element = Futile.atlasManager.GetElementWithName("funkin/images/icons/icon-" + elementName);
 
             sprite.SetAnchor(0.7f, 0.5f);
 
-            this.Container.AddChild(sprite);
-        }
-
-        public void Destroy()
-        {
-            if (this.sprite != null)
-                this.Container.RemoveChild(this.sprite);
-
-            if (this.owner != null)
-                (this.page as Page).subObjects.Remove(this);
+            scrollFactor = Vector2.zero;
         }
 
         public override void GrafUpdate(float timeStacker)
         {
             base.GrafUpdate(timeStacker);
 
-            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(pos, true));
             sprite.scaleX = flipped ? -Size.x : Size.x;
             sprite.scaleY = Size.y;
         }
 
-        public FSprite sprite;
-
     }
 
-    public class FLX_BAR : MenuObject
+    public class FLX_BAR : FunkinSprite
     {
 
-        public UnityEngine.Vector2 pos;
         public static UnityEngine.Vector2 wantedsize = new(15, 3.5f);
         public UnityEngine.Vector2 Size = wantedsize;
         public bool flipped = false;
 
         public FLX_BAR(Menu.Menu menu, MenuObject owner) : base(menu, owner)
         {
-            sprite = new FSprite("FLXGBAR");
 
-            this.Container.AddChild(sprite);
-        }
+            sprite.element = Futile.atlasManager.GetElementWithName("FLXGBAR");
 
-        public void Destroy()
-        {
-            if (this.sprite != null)
-                this.Container.RemoveChild(this.sprite);
+            scrollFactor = Vector2.zero;
 
-            if (this.owner != null)
-                (this.page as Page).subObjects.Remove(this);
+            this.IsPartOfHUD = true;
+
         }
 
         public override void GrafUpdate(float timeStacker)
@@ -331,13 +295,9 @@ namespace RWF.Swagshit
 
             this.Size = UnityEngine.Vector2.Lerp(this.Size, wantedsize, 0.3f);
 
-            sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(pos, true));
-            sprite.scaleX = flipped ? -Size.x : Size.x * Plugin.camHUDScale;
-            sprite.scaleY = Size.y * Plugin.camHUDScale;
+            sprite.scaleX = flipped ? -Size.x : Size.x;
+            sprite.scaleY = Size.y;
         }
-
-        public FSprite sprite;
-
     }
 
 }
