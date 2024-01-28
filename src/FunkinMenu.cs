@@ -167,6 +167,8 @@ namespace RWF
 
         public float camGameWantedZoom = 0.9f;
 
+        public float noteSpeed = 1f;
+
         public int camBounceSpeed = 4;
         public float camStrengh = 1f;
 
@@ -296,12 +298,6 @@ namespace RWF
                         break;
                 }
 
-            }
-            bool isSustainNote = daNote.isSustainNote;
-            if (isSustainNote)
-            {
-                dunceNote.length *= Conductor.step_crochet / 100f * 1.4f;
-                dunceNote.length *= this.SONG.speed;
             }
             dunceNote.gfNote = daNote.gfNote;
             dunceNote.pos = new Vector2(-5000f, 5000f);
@@ -462,6 +458,8 @@ namespace RWF
             }
 
             CreateNotes();
+
+            noteSpeed = SONG.speed;
 
             var charDataP1 = AssetManager.ResolveFilePath("funkin/characters/" + SONG.Player1Char.ToString() + ".json");
             var charDataP2 = AssetManager.ResolveFilePath("funkin/characters/" + SONG.Player2Char.ToString() + ".json");
@@ -1133,10 +1131,10 @@ namespace RWF
                 if (unspawnNotes.Count > 0 && unspawnNotes[0] != null)
                 {
                     float time = this.spawnTime;
-                    bool flag13 = this.SONG.speed < 1f;
+                    bool flag13 = noteSpeed < 1f;
                     if (flag13)
                     {
-                        time /= this.SONG.speed;
+                        time /= noteSpeed;
                     }
                     while (this.unspawnNotes.Count > 0 && this.unspawnNotes[0].strumTime - Conductor.songPosition < time)
                     {
@@ -1206,7 +1204,7 @@ namespace RWF
                         continue;
                     }
 
-                    if (Conductor.songPosition - note.strumTime > Mathf.Max(Conductor.step_crochet, 350 / SONG.speed))
+                    if (Conductor.songPosition - note.strumTime > Mathf.Max(Conductor.step_crochet, 350 / noteSpeed))
                     {
                         if (note.mustPress && !note.ignoreNote && (note.tooLate || !note.wasGoodHit))
                             noteMiss(note);
@@ -1233,8 +1231,8 @@ namespace RWF
                         vector2.x = playerStrums[note.noteData % 4].pos.x;
                     else
                         vector2.x = opponentStrums[note.noteData % 4].pos.x;
-
-                    vector2.y = (setYpos + 0.45f * (CurrentTime - note.strumTime) * SONG.speed * 1f);
+                    
+                    vector2.y = (setYpos + 0.45f * (CurrentTime - note.strumTime) * noteSpeed * 1f);
 
                     note.pos = vector2;
 

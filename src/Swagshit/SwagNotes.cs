@@ -98,7 +98,16 @@ namespace RWF.Swagshit
         public Vector2 lastpos = Vector2.zero;
         private Color color;
 
-        public float length = 1f;
+        public float length
+        {
+            get
+            {
+                var tehnewValue = 1f;
+                tehnewValue *= Conductor.step_crochet / 100f * 1.4f;
+                tehnewValue *= FunkinMenu.instance.SONG.speed;
+                return tehnewValue;
+            }
+        }
 
         public Color[] NoteColours = new Color[]
         {
