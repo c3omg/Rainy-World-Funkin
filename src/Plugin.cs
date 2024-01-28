@@ -149,9 +149,9 @@ namespace RWF
                     var shit = 2.5f;
 
                     if (Conductor.curBeat % 2 == 0)
-                        self.pages[0].Container.RotateAroundPointAbsolute(self.manager.rainWorld.screenSize / 2, Mathf.Lerp(-bruh, -shit, FlxEase.backOut(self.decBeat % 1)));
+                        self.pages[0].Container.RotateAroundPointAbsolute(self.manager.rainWorld.screenSize / 2, Mathf.Lerp(-bruh, -shit, FlxEase.backOut(self.curDecBeat % 1)));
                     else
-                        self.pages[0].Container.RotateAroundPointAbsolute(self.manager.rainWorld.screenSize / 2, Mathf.Lerp(bruh, shit, FlxEase.backOut(self.decBeat % 1)));
+                        self.pages[0].Container.RotateAroundPointAbsolute(self.manager.rainWorld.screenSize / 2, Mathf.Lerp(bruh, shit, FlxEase.backOut(self.curDecBeat % 1)));
                 }
 
             }
@@ -166,23 +166,23 @@ namespace RWF
 
                 if (Conductor.curBeat % 2 == 0)
                 {
-                    self.boyfriend.sprite.scaleX = Mathf.Lerp(up, self.boyfriend.size, FlxEase.circOut(self.decBeat % 1));
-                    self.boyfriend.sprite.scaleY = Mathf.Lerp(down, self.boyfriend.size, FlxEase.circOut(self.decBeat % 1));
-                    self.dad.sprite.scaleX = Mathf.Lerp(down, self.dad.size, FlxEase.circOut(self.decBeat % 1));
-                    self.dad.sprite.scaleY = Mathf.Lerp(up, self.dad.size, FlxEase.circOut(self.decBeat % 1));
+                    self.boyfriend.sprite.scaleX = Mathf.Lerp(up, self.boyfriend.size, FlxEase.circOut(self.curDecBeat % 1));
+                    self.boyfriend.sprite.scaleY = Mathf.Lerp(down, self.boyfriend.size, FlxEase.circOut(self.curDecBeat % 1));
+                    self.dad.sprite.scaleX = Mathf.Lerp(down, self.dad.size, FlxEase.circOut(self.curDecBeat % 1));
+                    self.dad.sprite.scaleY = Mathf.Lerp(up, self.dad.size, FlxEase.circOut(self.curDecBeat % 1));
 
-                    self.boyfriend.spriteOffset.y = Mathf.Lerp(-fuckyou, 0, FlxEase.circOut(self.decBeat % 1));
-                    self.dad.spriteOffset.y = Mathf.Lerp(fuckme, 0, FlxEase.circOut(self.decBeat % 1));
+                    self.boyfriend.spriteOffset.y = Mathf.Lerp(-fuckyou, 0, FlxEase.circOut(self.curDecBeat % 1));
+                    self.dad.spriteOffset.y = Mathf.Lerp(fuckme, 0, FlxEase.circOut(self.curDecBeat % 1));
                 }
                 else
                 {
-                    self.boyfriend.sprite.scaleX = Mathf.Lerp(down, self.boyfriend.size, FlxEase.circOut(self.decBeat % 1));
-                    self.boyfriend.sprite.scaleY = Mathf.Lerp(up, self.boyfriend.size, FlxEase.circOut(self.decBeat % 1));
-                    self.dad.sprite.scaleX = Mathf.Lerp(up, self.dad.size, FlxEase.circOut(self.decBeat % 1));
-                    self.dad.sprite.scaleY = Mathf.Lerp(down, self.dad.size, FlxEase.circOut(self.decBeat % 1));
+                    self.boyfriend.sprite.scaleX = Mathf.Lerp(down, self.boyfriend.size, FlxEase.circOut(self.curDecBeat % 1));
+                    self.boyfriend.sprite.scaleY = Mathf.Lerp(up, self.boyfriend.size, FlxEase.circOut(self.curDecBeat % 1));
+                    self.dad.sprite.scaleX = Mathf.Lerp(up, self.dad.size, FlxEase.circOut(self.curDecBeat % 1));
+                    self.dad.sprite.scaleY = Mathf.Lerp(down, self.dad.size, FlxEase.circOut(self.curDecBeat % 1));
 
-                    self.dad.spriteOffset.y = Mathf.Lerp(-fuckme, 0, FlxEase.circOut(self.decBeat % 1));
-                    self.boyfriend.spriteOffset.y = Mathf.Lerp(fuckyou, 0, FlxEase.circOut(self.decBeat % 1));
+                    self.dad.spriteOffset.y = Mathf.Lerp(-fuckme, 0, FlxEase.circOut(self.curDecBeat % 1));
+                    self.boyfriend.spriteOffset.y = Mathf.Lerp(fuckyou, 0, FlxEase.circOut(self.curDecBeat % 1));
                 }
                     
 

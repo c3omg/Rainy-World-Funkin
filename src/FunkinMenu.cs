@@ -8,13 +8,125 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Playables;
 using static MonoMod.InlineRT.MonoModRule;
 using static RWF.Conductor;
 
 
 namespace RWF
 {
-    public class FunkinMenu : Menu.Menu
+
+    public class MusicBeatState : Menu.Menu
+    {
+        public int curSection = 0;
+        public int stepsToDo = 0;
+
+        public int curStep = 0;
+        public int curBeat = 0;
+
+        public float curDecStep = 0;
+	    public float curDecBeat = 0;
+
+        public MusicBeatState(ProcessManager manager, ProcessManager.ProcessID ID) : base(manager, ID)
+        {
+        }
+
+        public override void Update()
+        {
+            int oldStep = curStep;
+
+            updateCurStep();
+            updateBeat();
+
+            if (oldStep != curStep)
+            {
+                if (curStep > 0)
+                    stepHit();
+
+                if (FunkinMenu.instance.SONG != null)
+                {
+                    if (oldStep < curStep)
+                        updateSection();
+                    else
+                        rollbackSection();
+                }
+            }
+
+            base.Update();
+        }
+
+        private void updateSection()
+        {
+            if (stepsToDo < 1) stepsToDo = Mathf.RoundToInt(getBeatsOnSection() * 4);
+            while (curStep >= stepsToDo)
+            {
+                curSection++;
+                float beats = getBeatsOnSection();
+                stepsToDo += Mathf.RoundToInt(beats * 4);
+                sectionHit();
+            }
+        }
+
+        private void rollbackSection()
+	    {
+		    if(curStep < 0) return;
+
+		    int lastSection = curSection;
+		    curSection = 0;
+		    stepsToDo = 0;
+		    for (int i = 0; i < FunkinMenu.instance.SONG.Sections.Count; i++)
+		    {
+			    if (FunkinMenu.instance.SONG.Sections[i] != null)
+			    {
+				    stepsToDo += Mathf.RoundToInt(getBeatsOnSection() * 4);
+				    if(stepsToDo > curStep) break;
+				
+				    curSection++;
+			    }
+		    }
+
+		    if(curSection > lastSection) sectionHit();
+	    }
+
+        private void updateBeat()
+	    {
+		    curBeat = Mathf.RoundToInt(curStep / 4);
+		    curDecBeat = curDecStep/4;
+	    }
+
+        private void updateCurStep()
+	    {
+		    var lastChange = Conductor.getBPMFromSeconds(Conductor.songPosition);
+
+            var shit = ((Conductor.songPosition) - lastChange.songTime) / lastChange.stepCrochet;
+            curDecStep = lastChange.stepTime + shit;
+		    curStep = lastChange.stepTime + Mathf.RoundToInt(shit);
+	    }
+
+        public virtual void stepHit()
+	    {
+		    if (curStep % 4 == 0)
+			    beatHit();
+	    }
+
+	    public virtual void beatHit()
+	    {
+	    }
+
+	    public virtual void sectionHit()
+	    {
+	    }
+
+        float getBeatsOnSection()
+        {
+            float? val = 4;
+            if (FunkinMenu.instance.SONG != null && FunkinMenu.instance.SONG.Sections[curSection] != null) val = FunkinMenu.instance.SONG.Sections[curSection].sectionBeats;
+            return (float)(val == null ? 4 : val);
+        }
+
+    }
+
+    public class FunkinMenu : MusicBeatState
     {
 
         //EVENTS
@@ -96,8 +208,6 @@ namespace RWF
         public int misses = 0;
         public float totalNotesHit = 0;
         public int totalPlayed = 0;
-
-        public float decBeat = 0;
 
         public FLX_BAR bar;
 
@@ -262,10 +372,6 @@ namespace RWF
 
             instance = this;
 
-            curBeat = 0;
-            curStep = 0;
-            decBeat = 0;
-
             Conductor.songPosition = -5000 / Conductor.songPosition;
 
             this.pages.Add(new Page(this, null, "game", 0));
@@ -295,7 +401,8 @@ namespace RWF
                 return;
             }
 
-            bpm = this.SONG.bpm;
+            Conductor.mapBPMChanges(SONG);
+            Conductor.bpm = SONG.bpm;
 
             crochet = (60f / bpm) * 1000;
 
@@ -582,7 +689,7 @@ namespace RWF
 
         }
 
-        public void beatHit(int curBeat)
+        public override void beatHit()
         {
             if (OnBeatHit != null)
             {
@@ -629,6 +736,8 @@ namespace RWF
 
                 Add_Camera_Zoom(0.015f * camStrengh, 0.03f * camStrengh);
             }
+
+            base.beatHit();
         }
 
         public void Add_Camera_Zoom(float gameZoom = 0.015f, float hudZoom = 0.03f)
@@ -982,16 +1091,12 @@ namespace RWF
                         Conductor.songPosition = -Conductor.crochet * 12;
                 }
 
-                decBeat = (CurrentTime / 1000f) / (60f / bpm);
-                curBeat = (int)Mathf.Floor((CurrentTime / 1000f) / (60f / bpm));
-                curStep = (int)Mathf.Floor(((CurrentTime / 1000f) / (60f / bpm)) * 4f);
-
                 var boyfriendlass = boyfriend.flipped ? boyfriend.pos + new UnityEngine.Vector2(-boyfriend.CameraOffset.x, boyfriend.CameraOffset.y) : boyfriend.pos + new UnityEngine.Vector2(boyfriend.CameraOffset.x, boyfriend.CameraOffset.y);
                 var dadlass = dad.flipped ? dad.pos + new UnityEngine.Vector2(-dad.CameraOffset.x, dad.CameraOffset.y) : dad.pos + new UnityEngine.Vector2(dad.CameraOffset.x, dad.CameraOffset.y);
 
-                if (curBeat >= 0 && SONG.Sections.Count > curBeat / 4)
+                if (curSection >= 0 && SONG.Sections.Count > curSection)
                 {
-                    if (SONG.Sections[curBeat / 4].mustHitSection)
+                    if (SONG.Sections[curSection].mustHitSection)
                         cameraTarget = boyfriendlass;
                     else
                         cameraTarget = dadlass;
@@ -1005,8 +1110,8 @@ namespace RWF
 
                 cameraPosiion = UnityEngine.Vector2.Lerp(cameraPosiion, cameraTarget, stage.camSpeed);
                 
-                hpIconP1.Size = new Vector2(Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)), Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)));
-                hpIconP2.Size = new Vector2(Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)), Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(decBeat % 1)));
+                hpIconP1.Size = new Vector2(Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(curDecBeat % 1)), Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(curDecBeat % 1)));
+                hpIconP2.Size = new Vector2(Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(curDecBeat % 1)), Mathf.Lerp(1.3f, 1.0f, FlxEase.quartOut(curDecBeat % 1)));
 
                 if (health > 2) health = 2;
                 else if (health <= 0)
@@ -1024,22 +1129,6 @@ namespace RWF
 
                 hpIconP1.pos = hpIconPosiiton - new Vector2(hpIconOffsets, 0);
                 hpIconP2.pos = hpIconPosiiton + new Vector2(hpIconOffsets, 0);
-
-                if (curBeat != lastBeat)
-                {
-                    //Debug.Log("Beat Hit: " + curBeat);
-                    //Plugin.camGameScale += 0.3f;
-                    lastBeat = curBeat;
-                    beatHit(curBeat);
-                }
-
-                if (curStep != lastStep)
-                {
-                    //Debug.Log("Beat Hit: " + curBeat);
-                    //Plugin.camGameScale += 0.3f;
-                    lastStep = curStep;
-                    stepHit(curStep);
-                }
 
                 if (unspawnNotes.Count > 0 && unspawnNotes[0] != null)
                 {
@@ -1265,9 +1354,11 @@ namespace RWF
 
         }
 
-        private void stepHit(int curStep)
+        public override void stepHit()
         {
             if (OnStepHit != null) OnStepHit(this, curStep);
+
+            base.stepHit();
         }
     }
 
