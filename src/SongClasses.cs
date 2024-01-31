@@ -229,6 +229,8 @@ namespace RWF.FNFJSON
         /// </summary>
         public int lengthInSteps = 16;
 
+        public int sectionBeats = 4;
+
 
         /// <summary>
         /// Creates a completely blank section

@@ -1,4 +1,5 @@
 ﻿using Menu;
+using RWF.FNFJSON;
 using UnityEngine;
 
 namespace RWF.Swagshit
@@ -97,7 +98,16 @@ namespace RWF.Swagshit
         public Vector2 lastpos = Vector2.zero;
         private Color color;
 
-        public float length = 1f;
+        public float length
+        {
+            get
+            {
+                var tehnewValue = 1f;
+                tehnewValue *= Conductor.step_crochet / 100f * 1.4f;
+                tehnewValue *= FunkinMenu.instance.SONG.speed;
+                return tehnewValue;
+            }
+        }
 
         public Color[] NoteColours = new Color[]
         {
@@ -169,7 +179,7 @@ namespace RWF.Swagshit
                     sprite = new("HoldEnd", true);
                 else
                     sprite = new("HoldNote", true);
-                sprite.SetAnchor(0.5f, 0.5f);
+                sprite.SetAnchor(0.5f, 0.2f);
             }
             else
             {
@@ -283,12 +293,12 @@ namespace RWF.Swagshit
                 this.sprite.scaleX = 2.5f * RWF_Options.HoldNoteThickness.Value;
             }
 
-            if (this.IsSusNote)
+            if (IsSusNote)
             {
                 if (mustPress)
-                    clipToStrumNote(FunkinMenu.instance.playerStrums[noteData]);
+                    clipToStrumNote(FunkinMenu.instance.playerStrums[noteData], timestacker);
                 else
-                    clipToStrumNote(FunkinMenu.instance.opponentStrums[noteData]);
+                    clipToStrumNote(FunkinMenu.instance.opponentStrums[noteData], timestacker);
             }
         }
 
@@ -322,22 +332,26 @@ namespace RWF.Swagshit
 	}
          */
 
-        public void clipToStrumNote(StrumNote myStrum)
+        public void clipToStrumNote(StrumNote myStrum, float timestacker = 0f)
         {
             float center = myStrum.pos.y;
             if (IsSusNote && (mustPress || !ignoreNote) &&
                 (!mustPress || (wasGoodHit || (prevNote.wasGoodHit && !canBeHit))))
             {
 
-                var bruhMoment = center - pos.y;
+                var bruhMoment = center - Vector2.Lerp(lastpos, pos, timestacker).y;
 
                 if (Mathf.Abs(bruhMoment) <= sprite.element.sourceSize.y * length && bruhMoment > 0)
-                    sprite.scaleY = length * (Mathf.Abs(bruhMoment) / (sprite.element.sourceSize.y));
+                    sprite.height = Mathf.Abs(bruhMoment);
                 else if (bruhMoment <= 0)
                     sprite.scaleY = 0;
                 else
                     sprite.scaleY = length;
 
+            }
+            else if (IsSusNote)
+            {
+                sprite.scaleY = length;
             }
         }
 
