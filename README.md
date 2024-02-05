@@ -1,18 +1,23 @@
+# [DOWNLOAD](https://downgit.github.io/#/home?url=https://github.com/c3omg/Rainy-World-Funkin/tree/master/mod) (BECAUSE IM NOT PUBLISHING TO WORKSHOP)
+### put it in `where ever the hell your steam is located\steamapps\common\Rain World\RainWorld_Data\StreamingAssets\mods`
+
 # Gettin' Funky on a Rainy day yuh
 
-silky's frudat nih fukky in ran world but some added stuff !!!!!!!!!!!!!!!!!!!!
+silky's frudat nih fukky in ran world but some added stuff 
 
 ## STILL A W.I.P
 
 most stuff aint finished
 
 ## stuff i added lol
-### NOTE: nothing is published here yet because update isnt polished enough lol
 - Downscroll (arrows scroll down and its cool ig)
 - Botplay (for chart showcases or people with a skILL ISSUE!!!!!!!!!)
-- wip health bar color stuff not done wahhhhhhh
+- health bar has colors yay
+- stages are now loaded by just images no spritesheet needed
+- other stuff i forgir mayb :-(
 
 ## stuff ill do later
 - fix keybind stuff that for some reason only work on silky's rain world and pirated rain world versions
+- fix ice cube because it broken 💔🥀🖤
 - sprite reworks idk
 - b
