@@ -17,26 +17,21 @@ namespace RWF.Swagshit
         public Vector2 scrollFactor = Vector2.one;
         public Vector2 spriteOffset = Vector2.zero;
         public bool IsPartOfHUD = false;
+        public UnityEngine.Color spriteColor = UnityEngine.Color.white;
 
         public FunkinMenu funkinMenu
         {
-            get
-            {
-                return this.menu as FunkinMenu;
-            }
+            get { return this.menu as FunkinMenu; }
         }
 
         public bool isInFunkinSecene
         {
-            get
-            {
-                return this.menu is FunkinMenu;
-            }
+            get { return this.menu is FunkinMenu; }
         }
 
         public FunkinSprite(Menu.Menu menu, Menu.MenuObject owner, bool IsPartOfHUD = false) : base(menu, owner) // why didnt i fucking add this from the start
         {
-            this.sprite = new("Futile_White");
+            this.sprite = new("pixel");
 
             this.Container.AddChild(sprite);
 
@@ -57,6 +52,9 @@ namespace RWF.Swagshit
             base.Update();
 
             lastpos = pos;
+
+            this.sprite.color = spriteColor; // bwaaah
+
         }
 
         private Vector2 GetPositionBasedOffCamScale(float timeStacker) // i wasnt tired when writing this, i just dont know how to fucking code alrighted

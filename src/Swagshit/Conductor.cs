@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace RWF
 {
-
     public class BPMChangeEvent
     {
         public int stepTime;
@@ -62,7 +61,7 @@ namespace RWF
 
         public static Conductor.ratingshit judgeNote(Swagshit.Note note, List<ratingshit> data, float diff = 0f)
         {
-
+            
             for (int i = 0; i < data.Count; i++)
             {
                 bool flag = diff <= data[i].hitWindow;
@@ -96,7 +95,6 @@ namespace RWF
                 if (time >= Conductor.bpmChangeMap[i].songTime)
                     lastChange = Conductor.bpmChangeMap[i];
             }
-
             return lastChange;
         }
 
@@ -149,33 +147,33 @@ namespace RWF
         }
 
         public static void mapBPMChanges(FNFJSON.Song song)
-	    {
-		    bpmChangeMap = new();
+        {
+            bpmChangeMap = new();
 
             float curBPM = song.bpm;
-		    int totalSteps = 0;
+            int totalSteps = 0;
             float totalPos = 0;
-		    for (int i = 0; i < song.Sections.Count; i++)
-		    {
-			    if(song.Sections[i].changeBPM && song.Sections[i].bpm != curBPM)
-			    {
-				    curBPM = song.Sections[i].bpm;
-                    BPMChangeEvent lastChange = new ()
+            for (int i = 0; i < song.Sections.Count; i++)
+            {
+                if (song.Sections[i].changeBPM && song.Sections[i].bpm != curBPM)
+                {
+                    curBPM = song.Sections[i].bpm;
+                    BPMChangeEvent lastChange = new()
                     {
                         stepTime = totalSteps,
                         songTime = totalPos,
                         bpm = curBPM,
-                        stepCrochet = calculateCrochet(curBPM)/4,
+                        stepCrochet = calculateCrochet(curBPM) / 4,
                     };
                     bpmChangeMap.Add(lastChange);
-			    }
+                }
 
-			    int deltaSteps = Mathf.RoundToInt(getSectionBeats(song, i) * 4);
-			    totalSteps += deltaSteps;
-			    totalPos += ((60 / curBPM) * 1000 / 4) * deltaSteps;
-		    }
-		    Debug.Log("new BPM map BUDDY " + bpmChangeMap);
-	    }
+                int deltaSteps = Mathf.RoundToInt(getSectionBeats(song, i) * 4);
+                totalSteps += deltaSteps;
+                totalPos += ((60 / curBPM) * 1000 / 4) * deltaSteps;
+            }
+            Debug.Log("new BPM map BUDDY " + bpmChangeMap);
+        }
 
         public static float getSectionBeats(FNFJSON.Song song, int section)
         {
@@ -189,12 +187,14 @@ namespace RWF
             return (60 / bpm) * 1000;
         }
 
-        public static float set_bpm(float newBPM) {
-		    bpm = newBPM;
-		    crochet = calculateCrochet(bpm);
+        public static float set_bpm(float newBPM)
+        {
+            bpm = newBPM;
+            crochet = calculateCrochet(bpm);
 
-		    return bpm = newBPM;
-	    }
+            return bpm = newBPM;
+        }
 
-}
+    }
+
 }

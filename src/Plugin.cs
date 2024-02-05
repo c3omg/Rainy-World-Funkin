@@ -10,14 +10,13 @@ using UnityEngine;
 
 namespace RWF
 {
-    [BepInPlugin(MOD_ID, "Rainy World Funkin'", "0.4.14")]
-    class Plugin : BaseUnityPlugin
+    [BepInPlugin(MOD_ID, "Rainy World Funkin': c3 Edition", "0.4.13")]
+    public class Plugin : BaseUnityPlugin
     {
         public static ProcessManager.ProcessID FunkinMenu => new ProcessManager.ProcessID("FunkinMenu", register: true);
         public static ProcessManager.ProcessID FunkinRestart => new ProcessManager.ProcessID("FunkinRestart", register: true);
         public static ProcessManager.ProcessID FunkinCharacterEditor => new ProcessManager.ProcessID("FunkinCharacterEditor", register: true);
 
-        public static SoundID[] missnote_sounds;
         public static SoundID[] introSounds = new SoundID[]
         {
             new SoundID("FNFIntro1", true),
@@ -33,7 +32,7 @@ namespace RWF
         //FNFRestart 
 
         public static ProcessManager.ProcessID FunkinFreeplayMenu => new ProcessManager.ProcessID("FunkinFreeplayMenu", register: true);
-        private const string MOD_ID = "silky.rwf";
+        private const string MOD_ID = "c3.rwf";
 
         public static Dictionary<string, string> Songs = new Dictionary<string, string>();
         public static float camGameScale = 1f;
@@ -41,7 +40,14 @@ namespace RWF
 
         public static string SelectedSong = "blammed";
 
+        private RWF_Options options;
+
         // Add hooks
+
+        public Plugin()
+        {
+            options = new RWF_Options();
+        }
 
         private static void LoadFunkin()
         {
@@ -187,6 +193,7 @@ namespace RWF
                     
 
             }
+
         }
 
         private void FunkinMenu_OnBeatHit(FunkinMenu self, int curBeat)
@@ -319,8 +326,7 @@ namespace RWF
                 "flx_bar",
                 "notes/FNF_Note",
                 "notes/FNF_Note_Splash",
-                "stages/outskirts",
-                "characters/hunter",
+                //"stages/outskirts", 
             };
 
             foreach (string item in array)
@@ -334,13 +340,7 @@ namespace RWF
         // Load any resources, such as sprites or sounds
         private void LoadResources(RainWorld rainWorld)
         {
-
-            missnote_sounds = new SoundID[]
-            {
-                new SoundID("Missnote1", true),
-                new SoundID("Missnote2", true),
-                new SoundID("Missnote3", true),
-            };
+            MachineConnector.SetRegisteredOI(MOD_ID, options);
 
             introSounds = new SoundID[]
             {
@@ -352,104 +352,107 @@ namespace RWF
 
             fnfRestart = new SoundID("FNFRestart", true);
 
-            MachineConnector.SetRegisteredOI(MOD_ID, new RWF_Options());
 
         }
     }
 
-    internal class RWF_Options : OptionInterface
+    public class RWF_Options : OptionInterface
     {
-
         public RWF_Options() : base()
         {
-
             GhostTapping = this.config.Bind("fnfghosttapping", true);
+
+            botplay = this.config.Bind("fnfbotplay", false);
+
+            downscroll = this.config.Bind("fnfdownscroll", false);
 
             HoldNoteThickness = this.config.Bind("fnfnotethickness", 1f);
 
-            key_note = new Configurable<KeyCode>[4];
-            key_note_alt = new Configurable<KeyCode>[4];
+            kN_Left = this.config.Bind<KeyCode>("fnfkeynoteleft", KeyCode.A);
+            kN_Down = this.config.Bind<KeyCode>("fnfkeynotedown", KeyCode.S);
+            kN_Up = this.config.Bind<KeyCode>("fnfkeynoteup", KeyCode.W);
+            kN_Right = this.config.Bind<KeyCode>("fnfkeynoteright", KeyCode.D);
 
-            key_note[0] = this.config.Bind("fnfkeynoteleft", KeyCode.A);
-            key_note[1] = this.config.Bind("fnfkeynotedown", KeyCode.S);
-            key_note[2] = this.config.Bind("fnfkeynoteup", KeyCode.W);
-            key_note[3] = this.config.Bind("fnfkeynoteright", KeyCode.D);
-
-            key_note_alt[0] = this.config.Bind("fnfkeynoteleft_alt", KeyCode.LeftArrow);
-            key_note_alt[1] = this.config.Bind("fnfkeynotedown_alt", KeyCode.DownArrow);
-            key_note_alt[2] = this.config.Bind("fnfkeynoteup_alt", KeyCode.UpArrow);
-            key_note_alt[3] = this.config.Bind("fnfkeynoteright_alt", KeyCode.RightArrow);
-
+            kN_LeftAlt = this.config.Bind<KeyCode>("fnfkeynoteleft_alt", KeyCode.LeftArrow);
+            kN_DownAlt = this.config.Bind<KeyCode>("fnfkeynotedown_alt", KeyCode.DownArrow);
+            kN_UpAlt = this.config.Bind<KeyCode>("fnfkeynoteup_alt", KeyCode.UpArrow);
+            kN_RightAlt = this.config.Bind<KeyCode>("fnfkeynoteright_alt", KeyCode.RightArrow);
         }
 
         public override void Initialize()
         {
-            this.Tabs = new OpTab[]
-            {
-                new OpTab(this, "Input"),
-                new OpTab(this, "Gameplay"),
-            };
+            //OpTab opInput = new OpTab(this, "Input");
+            OpTab opGameplay = new OpTab(this, "Gameplay");
 
             OpCheckBox OpGhostTap = new OpCheckBox(GhostTapping, new Vector2(45f, 530f));
-            OpFloatSlider opThickness = new OpFloatSlider(HoldNoteThickness, new Vector2(85f, 470f), 260, 2, false);
+            OpCheckBox OpBotplay = new OpCheckBox(botplay, new Vector2(45f, 500f));
+            OpCheckBox OpDownscroll = new OpCheckBox(downscroll, new Vector2(45f, 470f));
+            OpFloatSlider OpThickness = new OpFloatSlider(HoldNoteThickness, new Vector2(45f, 420f), 260, 2, false);
 
-            opThickness.max = 1f;
-            opThickness.min = 0.1f;
+            this.Tabs = new OpTab[]
+            {
+                //opInput,
+                opGameplay
+            };
 
-            this.Tabs[1].AddItems(new UIelement[]
+            //this.inputElement = new UIelement[] // rain world has a seizure every fuckin time i try to add a KeyBinder so i guess thats out for a while
+            //{
+            //    new OpKeyBinder(kN_Left, new Vector2(45f, 530f), new Vector2(125, 25)),
+            //    new OpLabel(45f, 500f, OptionInterface.Translate("Left Key"), false){ alignment = FLabelAlignment.Center },
+
+            //    new OpKeyBinder(kN_Down, new Vector2(175f, 530f), new Vector2(125, 25)),
+            //    new OpLabel(175f, 500f, OptionInterface.Translate("Down Key"), false){ alignment = FLabelAlignment.Center },
+
+            //    new OpKeyBinder(kN_Up, new Vector2(305f, 530f), new Vector2(125, 25)),
+            //    new OpLabel(305f, 500f, OptionInterface.Translate("Up Key"), false){ alignment = FLabelAlignment.Center },
+
+            //    new OpKeyBinder(kN_Right, new Vector2(435f, 530f), new Vector2(125, 25)),
+            //    new OpLabel(435f, 500f, OptionInterface.Translate("Right Key"), false){ alignment = FLabelAlignment.Center },
+            //};
+            //opInput.AddItems(inputElement);
+
+            this.gameplayElement = new UIelement[]
             {
                 OpGhostTap,
-                new OpLabel(45f, 500f, OptionInterface.Translate("Ghost Tap"), false)
-                {
-                    bumpBehav = OpGhostTap.bumpBehav,
-                },
+                new OpLabel(75f, 530f, OptionInterface.Translate("Ghost Tap"), false){ bumpBehav = OpGhostTap.bumpBehav, },
 
-                opThickness,
-                new OpLabel(45f, 470f, OptionInterface.Translate("Hold Note Thickness"), false)
-                {
-                    bumpBehav = OpGhostTap.bumpBehav,
-                },
-            });
+                OpBotplay,
+                new OpLabel(75f, 500f, OptionInterface.Translate("Botplay"), false){ bumpBehav = OpBotplay.bumpBehav, },
 
-            for (int i = 0; i < key_note.Length; i++)
-            {
+                OpDownscroll,
+                new OpLabel(75f, 470f, OptionInterface.Translate("Downscroll"), false) { bumpBehav = OpDownscroll.bumpBehav, },
 
-                string[] array = new string[]
-                {
-                    "Left",
-                    "Down",
-                    "Up",
-                    "Right",
-                };
+                OpThickness,
+                new OpLabel(45f, 445f, OptionInterface.Translate("Hold Note Thickness"), false){ bumpBehav = OpThickness.bumpBehav, },
 
-                OpKeyBinder OpKey = new OpKeyBinder(key_note[i], new Vector2(45f + (130f * i), 530f), new Vector2(125, 25))
-                {
-                    description = "This is for the " + array[i] + " key",
-                };
-
-                this.Tabs[0].AddItems(new UIelement[]
-                {
-
-                    OpKey,
-
-                    new OpLabel(45f + (130f * i), 500f, OptionInterface.Translate(array[i] + " Key"), false)
-                    {
-                        bumpBehav = OpKey.bumpBehav,
-                        alignment = FLabelAlignment.Center,
-                    },
-
-                });
-            }
+            };
+            opGameplay.AddItems(gameplayElement);
 
         }
 
         public static Configurable<bool> GhostTapping;
+
+        public static Configurable<bool> botplay;
+
+        public static Configurable<bool> downscroll;
 
         public static Configurable<float> HoldNoteThickness;
 
         public static Configurable<KeyCode>[] key_note;
         public static Configurable<KeyCode>[] key_note_alt;
 
+        // kill me fr
+        public static Configurable<KeyCode> kN_Left;
+        public static Configurable<KeyCode> kN_LeftAlt;
+        public static Configurable<KeyCode> kN_Down;
+        public static Configurable<KeyCode> kN_DownAlt;
+        public static Configurable<KeyCode> kN_Up;
+        public static Configurable<KeyCode> kN_UpAlt;
+        public static Configurable<KeyCode> kN_Right;
+        public static Configurable<KeyCode> kN_RightAlt;
+
+        //private UIelement[] inputElement;
+        private UIelement[] gameplayElement;
     }
 
 }

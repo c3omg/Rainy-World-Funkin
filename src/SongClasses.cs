@@ -231,7 +231,6 @@ namespace RWF.FNFJSON
 
         public int sectionBeats = 4;
 
-
         /// <summary>
         /// Creates a completely blank section
         /// </summary>

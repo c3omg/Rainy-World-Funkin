@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace RWF.Swagshit
 {
-
     public class StageJSON
     {
 
@@ -42,10 +41,10 @@ namespace RWF.Swagshit
     public class Stage : Menu.MenuObject
     {
 
-        public UnityEngine.Vector2 bfscroll = new(1, 1);
-        public UnityEngine.Vector2 dadscroll = new(1, 1);
-        public UnityEngine.Vector2 bf_pos = new(1, 1);
-        public UnityEngine.Vector2 dad_pos = new(1, 1);
+        public Vector2 bfscroll = new(1, 1);
+        public Vector2 dadscroll = new(1, 1);
+        public Vector2 bf_pos = new(1, 1);
+        public Vector2 dad_pos = new(1, 1);
         public Color textColorOverride = Color.white;
         private int failedattempts = 0;
         public float camSpeed = 0.1f;
@@ -79,7 +78,8 @@ namespace RWF.Swagshit
                 foreach (StageJSON.StagePieces v in Data.pieces)
                 {
                     FunkinSprite fObject = new(this.menu, this.page);
-                    fObject.sprite.element = Futile.atlasManager.GetElementWithName(v.spr_name);
+                    Futile.atlasManager.LoadImage("funkin/images/stages/" + v.spr_name); //this should have been done in the first place!!!!!!!!!!!!!!!!!!!!
+                    fObject.sprite.element = Futile.atlasManager.GetElementWithName("funkin/images/stages/" + v.spr_name);
                     fObject.sprite.SetAnchor(0, 0);
                     fObject.pos = v.pos;
                     fObject.sprite.scaleX = v.scale.x;
@@ -125,11 +125,11 @@ namespace RWF.Swagshit
                 this.page?.subObjects.Remove(this);
         }
 
-        public List<Swagshit.FunkinSprite> funkinObjects = new List<Swagshit.FunkinSprite>() { };
+        public List<FunkinSprite> funkinObjects = new List<FunkinSprite>() { };
         public List<FSprite> sprites = new List<FSprite>() { };
-        public Dictionary<FSprite, UnityEngine.Vector2> spritePostions = new Dictionary<FSprite, UnityEngine.Vector2>() { };
-        public Dictionary<FSprite, UnityEngine.Vector2> spriteScrollFactor = new Dictionary<FSprite, UnityEngine.Vector2>() { };
-        public Dictionary<FSprite, UnityEngine.Vector2> spriteSize = new Dictionary<FSprite, UnityEngine.Vector2>() { };
+        public Dictionary<FSprite, Vector2> spritePostions = new Dictionary<FSprite, Vector2>() { };
+        public Dictionary<FSprite, Vector2> spriteScrollFactor = new Dictionary<FSprite, Vector2>() { };
+        public Dictionary<FSprite, Vector2> spriteSize = new Dictionary<FSprite, Vector2>() { };
         public float camZoom = 0.9f;
 
     }

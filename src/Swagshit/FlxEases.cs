@@ -226,4 +226,10 @@ internal static class FlxEase
 		}
 		return Mathf.Pow(2, -10 * (t -= 0.5f)) * Mathf.Sin((t - (ELASTIC_PERIOD / 4)) * (2 * (float)Math.PI) / ELASTIC_PERIOD) * 0.5f + 1;
 	}
+
+    public static float decicOut(float t)
+	{
+        return 1 - (float)Math.Pow(1 - t, 10); // dont ask
+    }
+
 }

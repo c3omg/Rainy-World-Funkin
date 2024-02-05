@@ -141,6 +141,7 @@ namespace RWF.Swagshit
 
         public Character(Menu.Menu menu, Menu.MenuObject owner) : base(menu, owner) // why would you ever want to create a character manually????
         {
+
         }
 
 
@@ -152,6 +153,10 @@ namespace RWF.Swagshit
         /// <param name="charData"></param>
         public Character(Menu.Menu menu, Menu.MenuObject owner, string charData) : base(menu, owner)
         {
+            this.sprite = new("Futile_White");
+
+            this.Container.AddChild(sprite);
+
             this.LoadCharacterDataFromRawData(charData);
         }
 
@@ -185,6 +190,7 @@ namespace RWF.Swagshit
             this.framerate = ANIM_FRATE[name];
             this.curAnim = name;
         }
+
 
         public override void Update()
         {
@@ -258,6 +264,7 @@ namespace RWF.Swagshit
 
             sprite.SetAnchor(0.7f, 0.5f);
 
+            this.Container.AddChild(sprite);
             scrollFactor = Vector2.zero;
         }
 
@@ -268,36 +275,59 @@ namespace RWF.Swagshit
             sprite.scaleX = flipped ? -Size.x : Size.x;
             sprite.scaleY = Size.y;
         }
+
 
     }
 
     public class FLX_BAR : FunkinSprite
     {
 
-        public static UnityEngine.Vector2 wantedsize = new(15, 3.5f);
+        public static UnityEngine.Vector2 wantedsize = new(1, 3.5f);
         public UnityEngine.Vector2 Size = wantedsize;
         public bool flipped = false;
 
         public FLX_BAR(Menu.Menu menu, MenuObject owner) : base(menu, owner)
         {
-
             sprite.element = Futile.atlasManager.GetElementWithName("FLXGBAR");
-
             scrollFactor = Vector2.zero;
-
             this.IsPartOfHUD = true;
-
         }
 
         public override void GrafUpdate(float timeStacker)
         {
             base.GrafUpdate(timeStacker);
 
-            this.Size = UnityEngine.Vector2.Lerp(this.Size, wantedsize, 0.3f);
+            this.Size = Vector2.Lerp(this.Size, wantedsize, 0.3f);
 
             sprite.scaleX = flipped ? -Size.x : Size.x;
             sprite.scaleY = Size.y;
         }
+    }
+
+    public class FLX_BAR_FILL : FunkinSprite // fuck
+    {
+        public static Vector2 wantedsize = new(100f, 15f);
+        public Vector2 Size = wantedsize;
+        public bool flipped = false;
+
+        public FLX_BAR_FILL(Menu.Menu menu, MenuObject owner, Color hpcolor) : base(menu, owner)
+        {
+            sprite.element = Futile.atlasManager.GetElementWithName("pixel");
+            spriteColor = hpcolor;
+            scrollFactor = Vector2.zero;
+            this.IsPartOfHUD = true;
+        }
+        public override void GrafUpdate(float timeStacker)
+        {
+            base.GrafUpdate(timeStacker);
+
+            this.Size = Vector2.Lerp(this.Size, wantedsize, 0.3f);
+
+            //sprite.SetPosition((this.menu as FunkinMenu).GetPositionBasedOffCamScale(pos, true));
+            //sprite.scaleX = flipped ? -Size.x : Size.x * Plugin.camHUDScale;
+            sprite.scaleY = Size.y * Plugin.camHUDScale;
+        }
+
     }
 
 }
