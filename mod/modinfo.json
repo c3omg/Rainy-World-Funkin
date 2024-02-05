@@ -1,10 +1,10 @@
 ﻿{
-	"id": "silky.rwf",
-	"name": "Rainy World Funkin'",
-	"version": "0.4.14",
-	"authors": "Silky",
-	"description": "A Recreation of the fnf engine in Rain World<LINE>Has modding support so you can create custom songs from your own mod",
+	"id": "c3.rwf",
+	"name": "Rainy World Funkin': c3 Engine",
+	"version": "0.4.14b",
+	"authors": "Silky, c3",
+	"description": "Silky's RWF but a bit more better (for me at least)",
 	"requirements": [],
 	"requirements_names": [],
-	"checksum_override_version" : false
+	"checksum_override_version" : true
 }

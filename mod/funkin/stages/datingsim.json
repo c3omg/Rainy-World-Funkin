@@ -1,7 +1,7 @@
 {
 	"pieces" : [
 		{
-			"spr_name": "Futile_White",
+			"spr_name": "datingsim/white",
 			"pos": {"x": -225, "y": -225},
 			"scale": {"x": 175, "y": 175},
 			"scroll": {"x": 0, "y": 0}
