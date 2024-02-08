@@ -10,6 +10,7 @@ silky's frudat nih fukky in ran world but some added stuff
 most stuff aint finished
 
 ## stuff i added lol
+- miss sounds are removed (because annoying)
 - Downscroll (arrows scroll down and its cool ig)
 - Botplay (for chart showcases or people with a skILL ISSUE!!!!!!!!!)
 - health bar has colors yay
