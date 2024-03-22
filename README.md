@@ -1,9 +1,9 @@
 # [DOWNLOAD](https://downgit.github.io/#/home?url=https://github.com/c3omg/Rainy-World-Funkin/tree/master/mod) (BECAUSE IM NOT PUBLISHING TO WORKSHOP)
 ### put it in `where ever the hell your steam is located\steamapps\common\Rain World\RainWorld_Data\StreamingAssets\mods`
 
-# Gettin' Funky on a Rainy day yuh
+# THIS IS CANCELLED!!!!!!!!!!!!!!
 
-silky's frudat nih fukky in ran world but some added stuff 
+because i leave rain world community aww so sad :( abcvcdfpvks[v
 
 ## STILL A W.I.P
 
